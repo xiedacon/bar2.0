@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts> 
+	<package name="bar" namespace="/" extends="struts-default">
+	
+		<default-action-ref name="index"></default-action-ref>
+		
+		<global-results>
+			<result name="msg">/WEB-INF/jsps/stage/msg.jsp</result>
+			<result name="index">/WEB-INF/html/stage/index.html</result>
+		</global-results>
+		
+		<action name="index" class="indexAction">
+		</action>
+
+		<action name="post_*" class="postActionImpl" method="{1}">
+			<result name="toPost">/WEB-INF/html/stage/post.html</result>
+		</action>
+		
+		<action name="user_*" class="userActionImpl" method="{1}">
+		</action>
+		
+		<action name="reply_*" class="replyActionImpl" method="{1}">
+		</action>
+		
+		<action name="floor_*" class="floorActionImpl" method="{1}">
+			<result name="createFloor" type="redirectAction">
+				<param name="actionName">post_toPost</param>
+				<param name="post.pid">${post.pid}</param>
+			</result>
+		</action>
+	</package>
+</struts>
+		

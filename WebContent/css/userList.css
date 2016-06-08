@@ -1,0 +1,24 @@
+.body .result-table .user-td{
+    width: 30%;
+}
+.body .result-table .experience-td{
+    width: 9%;
+}
+.body .result-table .level-td{
+    width: 9%;
+}
+.body .result-table .postNum-td{
+    width: 12%;
+}
+.body .result-table .qualityPost-td{
+    width: 9%;
+}
+.body .result-table .time-td{
+    width: 19%;
+}
+.body .result-table .operation-td{
+    width: 12%;
+}
+.body .result-table .operation{
+    text-align: left;
+}

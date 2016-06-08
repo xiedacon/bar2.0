@@ -1,0 +1,18 @@
+.body .result-table .select-td{
+    width: 5%;
+}
+.body .result-table .user-td{
+    width: 40%;
+}
+.body .result-table .forbiddenTime-td{
+    width: 10%;
+}
+.body .result-table .time-td{
+    width: 20%;
+}
+.body .result-table .people-td{
+    width: 15%;
+}
+.body .result-table .operation-td{
+    width: 10%;
+}

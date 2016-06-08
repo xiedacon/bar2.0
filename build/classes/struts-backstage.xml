@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<package name="admin" namespace="/admin" extends="struts-default">
+
+		<interceptors>
+			<interceptor name="privilege"
+				class="cn.xiedacon.bar.interceptors.PrivilegeInterceptor"></interceptor>
+			<interceptor-stack name="privilegeStack">
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+				<interceptor-ref name="privilege"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+
+		<global-results>
+			<result name="index" type="redirect">/index</result>
+		</global-results>
+
+		<action name="index">
+			<result>/WEB-INF/html/backstage/index.html</result>
+			<interceptor-ref name="privilegeStack"></interceptor-ref>
+		</action>
+
+		<action name="admin_*" class="adminActionImpl" method="{1}">
+			<result name="index" type="redirect">/index</result>
+		</action>
+
+		<action name="user_*" class="userActionImpl" method="{1}">
+			<interceptor-ref name="privilegeStack"></interceptor-ref>
+		</action>
+		<action name="postLog_*" class="postLogActionImpl" method="{1}">
+			<result name="index" type="redirect">/index</result>
+			<interceptor-ref name="privilegeStack"></interceptor-ref>
+		</action>
+
+		<action name="userLog_*" class="userLogActionImpl" method="{1}">
+			<result name="forbiddenList">/WEB-INF/jsps/backstage/user/forbiddenList.jsp
+			</result>
+			<result name="blackList">/WEB-INF/jsps/backstage/user/blackList.jsp
+			</result>
+			<result name="userAppeal">/WEB-INF/jsps/backstage/user/userAppeal.jsp
+			</result>
+			<result name="userLog">/WEB-INF/jsps/backstage/user/userLog.jsp</result>
+			<result name="userList" type="redirect">/user_findAllUser</result>
+			<interceptor-ref name="privilegeStack"></interceptor-ref>
+		</action>
+
+		<action name="adminLog_*" class="adminLogActionImpl" method="{1}">
+			<result name="adminManage">/WEB-INF/jsps/backstage/admin/adminManage.jsp
+			</result>
+			<result name="adminLog">/WEB-INF/jsps/backstage/admin/adminLog.jsp
+			</result>
+		</action>
+
+		<action name="load_*">
+			<result>/WEB-INF/jsps/backstage/{1}.jsp</result>
+			<interceptor-ref name="privilegeStack"></interceptor-ref>
+		</action>
+	</package>
+</struts>
+		

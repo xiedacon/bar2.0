@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="../css/reset.css">
+<link rel="stylesheet" type="text/css" href="../css/common.css">
+<link rel="stylesheet" type="text/css" href="../css/admin.css">
+<link id="css" rel="stylesheet" type="text/css" href="../css/postDelete.css">
+<title>吧务中心</title>
+<style type="text/css">
+html {
+	background: #fff;
+}
+
+.top {
+	height: 50px;
+	border-bottom: 30px #7A8DA0 solid;
+}
+
+.top h1 {
+	padding-left: 1%;
+}
+
+.top h1 a {
+	line-height: 50px;
+	font-size: 20px;
+	color: #C2C2C2;
+}
+
+.material-left {
+	width: 15%;
+	background: #282D45;
+	overflow: hidden;
+}
+
+.material:after {
+	display: block;
+	visibility: hidden;
+	content: "";
+	height: 0;
+	clear: both;
+}
+
+.material-right {
+	width: 85%;
+}
+
+.material-left .user {
+	background: #414A73;
+	height: 30.15%
+}
+
+.material-left .index-user-icon {
+	margin: 5.56% 25.6% 0 25.6%;
+	width: 48.8%;
+	height: 55.56%;
+	border-radius: 50px;
+	overflow: hidden;
+}
+
+.material-left .index-user-name {
+	margin: 1% 0 0 0;
+	display: block;
+	font-size: 1.25em;
+	text-align: center;
+	color: #fff;
+}
+
+.material-left .user-location {
+	margin: 1% 0 7% 0;
+	display: block;
+	font-size: 1em;
+	text-align: center;
+	color: #fff;
+}
+
+.material-left .nav {
+	height: 50%;
+}
+
+.material-left .nav-button {
+	display: block;
+	width: 100%;
+	height: 16.67%;
+	line-height: 50px;
+	color: #fff;
+	font-size: 1.2em;
+}
+
+.material-left .nav-button span {
+	margin: -2% 0 0 0;
+	display: inline-block;
+	height: 50px;
+	width: 5%;
+	vertical-align: middle;
+}
+
+.material-left .nav-li:hover span {
+	background: #D1402F;
+}
+
+.material-left .nav-button i {
+	font-family: "icomoon";
+	color: #8686B7;
+}
+
+.material-left .nav-button-a {
+	display: inline-block;
+	color: #fff;
+	line-height: 30px;
+	font-size: 0.8em;
+	width: 100%;
+}
+
+.material-left .nav-button-a i {
+	display: inline-block;
+	background: #fff;
+	width: 3px;
+	height: 3px;
+	vertical-align: middle;
+	margin: -5px 10px 0 27px;
+}
+
+.material-left .nav ul {
+	display: none;
+}
+
+.material-left .now {
+	border: 5px #282D45 solid;
+	border-right-color: #fff;
+	background: #fff;
+	margin: 10px 0;
+}
+
+.main {
+	width: 100%;
+	height: 100%;
+	background: #fff;
+	text-align: center;
+	font-size: 30px;
+	padding-top: 10%;
+	box-sizing: border-box;
+}
+</style>
+</head>
+<script type="text/javascript" src="../js/admin.js"></script>
+<script type="text/javascript" src="../js/jquery-1.12.1.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		var height = document.body.clientHeight;
+		$(".material-left").css({
+			'min-height' : height - 80,
+		});
+		$(".material-left .nav-button").click(function(event) {
+			$(this).siblings().stop().slideToggle(300);
+			$(this).parent().siblings().children('ul').stop().slideUp(300);
+		});
+		$(".material-left .nav-button-a").click(function(event) {
+			$(this).css({
+				color : '#D1402F'
+			}).children("i").css({
+				background : '#D1402F'
+			});
+			$(this).children("div").attr({
+				class : 'now fr'
+			});
+			var a = $(this).parent().siblings().children("a");
+			a.css({
+				color : '#fff'
+			}).children("i").css({
+				background : '#fff'
+			});
+			a.children("div").attr({
+				class : 'fr'
+			});
+			var a = $(this).parent().parent().parent().siblings().children('ul').children().children("a");
+			a.css({
+				color : '#fff'
+			}).children("i").css({
+				background : '#fff'
+			});
+			a.children("div").attr({
+				class : 'fr'
+			});
+		});
+		$(window).scroll(function() {
+			var top_height = $(".top").outerHeight();
+			var _height = Math.max(document.body.scrollTop || document.documentElement.scrollTop);
+			var left = $(".material-left");
+			if (_height > top_height) {
+				left.css({
+					position : 'fixed',
+					top : '0',
+					left : '0',
+					'min-height' : height,
+				});
+			} else {
+				left.css({
+					position : 'static',
+				});
+			}
+		});
+		function loadDiv(name) {
+		}
+
+		$(".deletePost").click(function(e) {
+			toDeletePost();
+		})
+		$(".postLog").click(function(e) {
+			toPostLog();
+		})
+		$(".postAppeal").click(function(e) {
+			alert("暂未添加该功能");
+			return;
+			//loadDiv("admin/postLog_findUnprocessAppealLogAll");
+		})
+		$(".userList").click(function(e) {
+			toUserList();
+		})
+		$(".forbiddenList").click(function(e) {
+			toForbiddenList();
+		})
+		$(".blackList").click(function(e) {
+			alert("暂未添加该功能");
+			return;
+			//loadDiv("admin/userLog_findUnrecoverBlackListLog");
+		})
+		$(".userAppeal").click(function(e) {
+			alert("暂未添加该功能");
+			return;
+			//loadDiv("admin/userLog_findUnprocessAppealLog");
+		})
+		$(".userLog").click(function(e) {
+			toUserLog();
+		})
+		$(".barInformation").click(function(e) {
+			alert("暂未添加该功能");
+			return;
+			//loadDiv("admin/load_barInformation");
+		})
+		$(".pictureRecycle").click(function(e) {
+			alert("暂未添加该功能");
+			return;
+			//loadDiv("admin/load_pictureRecycle");
+		})
+		$(".adminAttendance").click(function(e) {
+			alert("暂未添加该功能");
+			return;
+			//loadDiv("admin/load_adminAttendance");
+		})
+		$(".adminManage").click(function(e) {
+			toAdminManage();
+		})
+		$(".adminLog").click(function(e) {
+			toAdminLog();
+		})
+		$(".adminApproval").click(function(e) {
+			alert("暂未添加该功能");
+			return;
+			//loadDiv("admin/load_adminApproval");
+		})
+		$(".generalAdminHost").click(function(e) {
+			alert("暂未添加该功能");
+			return;
+			//loadDiv("admin/load_generalAdminHost");
+		})
+		$(".barSettings").click(function(e) {
+			alert("暂未添加该功能");
+			return;
+			//loadDiv("admin/load_barSettings");
+		})
+
+		$(".login").find("a").text("欢迎：" + user.name);
+		$(".regist").find("a").attr("href", getUrl() + "/admin/admin_toStage");
+		$(".index").find("a").attr("href", getUrl() + "/index");
+		$(".index-user-icon").attr("src", getUrl() + "/image/" + user.icon);
+		$(".index-user-name").text(user.name);
+
+	})
+</script>
+<body>
+	<div class="top">
+		<ul class="top_head fr">
+			<li class="login fl">
+				<div class="head_div">
+					<a>欢迎</a>
+				</div>
+			</li>
+			<li class="regist fl">
+				<div class="head_div">
+					<a href="/admin/admin_toStage">退出后台</a>
+				</div>
+			</li>
+			<li class="buy fl">
+				<div class="head_div">
+					<a class="buy_a" href="#" title="购买商品"></a>
+				</div>
+			</li>
+			<li class="app fl">
+				<div class="head_div">
+					<a class="app_a" href="#" title="下载手机端"></a>
+				</div>
+			</li>
+			<li class="separator fl">|</li>
+			<li class="center fl">
+				<div class="head_div">
+					<a class="center_a" href="#">应用中心</a>
+				</div>
+			</li>
+			<li class="vip fl">
+				<div class="head_div">
+					<a class="vip_a" href="#">会员官网</a>
+				</div>
+			</li>
+			<li class="index fl">
+				<div class="head_div">
+					<a class="index_a" href="index">首页</a>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<div class="material">
+		<div class="material-left fl">
+			<div class="user">
+				<img class="index-user-icon" src=""> <span class="index-user-name"></span> <span class="user-location">所在吧：我的吧</span>
+			</div>
+			<ul class="nav">
+				<li class="nav-li"><a href="#" class="nav-button"><span></span><i></i>帖子管理</a>
+					<ul class="a">
+						<li><a href="#" class="nav-button-a deletePost"><i></i>吧务删帖</a></li>
+						<li><a href="#" class="nav-button-a postLog"><i></i>帖子管理日志 </a></li>
+						<li><a href="#" class="nav-button-a postAppeal"><i></i>用户帖子申诉 </a></li>
+					</ul></li>
+				<li class="nav-li"><a href="#" class="nav-button"><span> </span><i></i>用户管理</a>
+					<ul>
+						<li><a href="#" class="nav-button-a userList"><i></i>会员列表</a></li>
+						<li><a href="#" class="nav-button-a forbiddenList"><i></i>用户封禁列表 </a></li>
+						<li><a href="#" class="nav-button-a blackList"><i></i>黑名单列表 </a></li>
+						<li><a href="#" class="nav-button-a userAppeal"><i></i>用户申诉列表 </a></li>
+						<li><a href="#" class="nav-button-a userLog"><i></i>用户管理日志 </a></li>
+					</ul></li>
+				<li class="nav-li"><a href="#" class="nav-button"><span> </span><i> </i>数据统计</a>
+					<ul>
+						<li><a href="#" class="nav-button-a barInformation"><i></i>本吧数据 </a></li>
+					</ul></li>
+				<li class="nav-li"><a href="#" class="nav-button"><span> </span><i> </i>资源区管理</a>
+					<ul>
+						<li><a href="#" class="nav-button-a pictureRecycle"><i></i>图册精品回收站 </a></li>
+					</ul></li>
+				<li class="nav-li"><a href="#" class="nav-button"><span> </span><i> </i>吧务团队</a>
+					<ul>
+						<li><a href="#" class="nav-button-a adminAttendance"><i></i>吧务考勤 </a></li>
+						<li><a href="#" class="nav-button-a adminManage"><i></i>团队人员管理 </a></li>
+						<li><a href="#" class="nav-button-a adminLog"><i></i>吧务管理日志 </a></li>
+						<li><a href="#" class="nav-button-a adminApproval"><i></i>吧务审批 </a></li>
+						<li><a href="#" class="nav-button-a"><i></i>吧务群 </a></li>
+						<li><a href="#" class="nav-button-a generalAdminHost"><i></i>普通吧主管理 </a></li>
+					</ul></li>
+				<li class="nav-li"><a href="#" class="nav-button"><span> </span><i> </i>工具及设置</a>
+					<ul>
+						<li><a href="#" class="nav-button-a"><i></i>贴吧神兽 </a></li>
+						<li><a href="#" class="nav-button-a barSettings"><i></i>本吧设置 </a></li>
+					</ul></li>
+			</ul>
+		</div>
+		<div class="material-right fr iframe">
+			<div id="index" class="main">欢迎使用吧务中心</div>
+			<div id="postDelete" style="display: none;">
+				<div class="head">
+					<h1>吧务删帖</h1>
+					<form>
+						<div class="form-top">
+							<span class="initiatorOrOperator"><input name="initiatorOrOperator" type="radio" value="0" />发起人</span> <span class="initiatorOrOperator"><input
+								name="initiatorOrOperator" type="radio" value="1" />操作人</span>
+						</div>
+						<div class="form-bottom">
+							<input class="condition" name="username" type="text" />
+							<div class="operationTime">
+								<input class="operationTime-after" name="operationTime-after" type="date">至 <input class="operationTime-before"
+									name="operationTime-before" type="date"> <a href="#" class="button">搜索</a> <a href="#" class="searchAll">显示全部记录</a>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="body">
+					<p class="result">
+						共<span class="result-count"></span>条记录
+					</p>
+					<table class="result-table">
+						<thead>
+							<tr>
+								<td class="select-td">&nbsp;</td>
+								<td class="content-td">帖子内容</td>
+								<td class="people-td">全部操作人</td>
+								<td class="operationTime-td">操作时间</td>
+								<td class="recover-td">恢复帖子</td>
+							</tr>
+						</thead>
+						<tbody></tbody>
+						<tfoot class="table-foot">
+							<tr>
+								<td colspan="5" id="pages"></td>
+							</tr>
+							<tr>
+								<td colspan="5">
+									<p class="selectAll">
+										<input type="checkbox"><span>全选</span>
+									</p> <a href="#" class="button recoverSelected">选中项恢复</a>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+			<div id="postLog" style="display: none;">
+				<div class="head">
+					<h1>帖子管理日志</h1>
+					<form>
+						<div class="form-top">
+							<span><input name="initiator" type="radio" value="0" />发起人</span> <span><input name="operator" type="radio" value="1" />操作人</span>
+						</div>
+						<div class="form-bottom">
+							<input class="condition" name="username" type="text" />
+							<div class="operationTime">
+								<input class="operationTime-after" name="operationTime_begin" type="date">至 <input class="operationTime-before"
+									name="operationTime_end" type="date"> <a id="search" href="#" class="button">搜索</a> <a id="searchAll" href="#" class="searchAll">显示全部记录</a>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="body">
+					<p class="result">
+						共<span class="result-count"></span>条记录
+					</p>
+					<table class="result-table">
+						<thead>
+							<tr>
+								<td class="content-td">帖子内容</td>
+								<td class="operation-td">全部操作</td>
+								<td class="people-td">全部操作人</td>
+								<td class="operationTime-td">操作时间</td>
+							</tr>
+						</thead>
+						<tbody></tbody>
+						<tfoot class="table-foot">
+							<tr>
+								<td id="pages" colspan="5"></td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+			<div id="userList" style="display: none;">
+				<div class="head">
+					<h1>会员列表</h1>
+					<div class="form-bottom">
+						<span>用户名</span> <input class="condition" type="text"> <a class="button" href="#">搜索</a>
+					</div>
+				</div>
+				<div class="body">
+					<p class="result">
+						共<span class="result-count"></span>条记录
+					</p>
+					<table class="result-table">
+						<thead>
+							<tr>
+								<td class="user-td">头像和用户名</td>
+								<td class="experience -td">经验值</td>
+								<td class="level-td">等级</td>
+								<td class="postNum-td">本吧发帖数</td>
+								<td class="qualityPost-td">精品贴</td>
+								<td class="time-td">加入时间</td>
+								<td class="operation-td">操作</td>
+							</tr>
+						</thead>
+						<tbody></tbody>
+						<tfoot class="table-foot">
+							<tr>
+								<td id="pages" colspan="7"></td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+			<div id="forbiddenList" style="display: none;">
+				<div class="head">
+					<h1>用户封禁列表</h1>
+					<div class="form-bottom">
+						<span>用户名</span> <input class="condition" type="text"> <a class="button" href="#">搜索</a>
+					</div>
+				</div>
+				<div class="body">
+					<p class="result">
+						共<span class="result-count"></span>条记录
+					</p>
+					<table class="result-table">
+						<thead>
+							<tr>
+								<td class="select-td"></td>
+								<td class="user-td">头像和用户名</td>
+								<td class="forbiddenTime-td">封禁时长</td>
+								<td class="time-td">操作时间</td>
+								<td class="people-td">全部操作人</td>
+								<td class="operation-td">操作</td>
+							</tr>
+						</thead>
+						<tbody></tbody>
+						<tfoot class="table-foot">
+							<tr>
+								<td id="pages" colspan="6"></td>
+							</tr>
+							<tr>
+								<td colspan="6">
+									<p class="selectAll">
+										<input type="checkbox"><span>全选</span>
+									</p> <a href="#" class="button forbiddenSelected">选中项解除封禁</a>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+			<div id="userLog" style="display: none;">
+				<div class="head">
+					<h1>用户管理日志</h1>
+					<div class="form-bottom">
+						<span>用户名</span> <input class="condition" type="text"> <a class="button" href="#">搜索</a>
+					</div>
+				</div>
+				<div class="body">
+					<p class="result">
+						共<span class="result-count"></span>条记录
+					</p>
+					<table class="result-table">
+						<thead>
+							<tr>
+								<td class="content-td">头像和用户名</td>
+								<td class="operation-td">全部操作</td>
+								<td class="people-td">全部操作人</td>
+								<td class="operationTime-td">操作时间</td>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+						<tfoot class="table-foot">
+							<tr>
+								<td id="pages" colspan="5"></td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+			<div id="adminManage" style="display: none;">
+				<div class="head">
+					<h1>团队人员管理</h1>
+					<h2>添加吧务成员</h2>
+					<form class="form-bottom">
+						<select id="positions" name="id" class="select"></select> <input name="username" class="condition" type="text"> <a id="addAdmin"
+							href="#" class="button">添加</a>
+					</form>
+				</div>
+				<div class="body">
+					<ul id="userMap" class="list"></ul>
+				</div>
+			</div>
+			<div id="adminLog" style="display: none;">
+				<div class="head">
+					<h1>吧务管理日志</h1>
+					<form>
+						<div class="form-top">
+							<span><input name="initiator" type="radio" value="0" />发起人</span> <span><input name="operator" type="radio" value="1" />操作人</span> <span
+								class="time">操作时间</span>
+						</div>
+						<div class="form-bottom">
+							<input class="condition" name="username" type="text" />
+							<div class="operationTime">
+								<input class="operationTime-after" name="operationTime-after" type="date">至 <input class="operationTime-before"
+									name="operationTime-before" type="date"> <a href="#" class="button">搜索</a> <a href="#" class="searchAll">显示全部记录</a>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="body">
+					<p class="result">
+						共<span class="result-count"></span>条记录
+					</p>
+					<table class="result-table">
+						<thead>
+							<tr>
+								<td class="content-td">用户名</td>
+								<td class="operation-td">操作</td>
+								<td class="people-td">全部操作人</td>
+								<td class="operationTime-td">操作时间</td>
+							</tr>
+						</thead>
+						<tbody></tbody>
+						<tfoot class="table-foot">
+							<tr>
+								<td id="pages" colspan="4"></td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

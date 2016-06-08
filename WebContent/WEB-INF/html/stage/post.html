@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>帖子详情页</title>
+<link rel="stylesheet" type="text/css" href="css/reset.css">
+<link rel="stylesheet" type="text/css" href="css/common.css">
+<link rel="stylesheet" type="text/css" href="css/post.css">
+<style type="text/css">
+</style>
+</head>
+<script type="text/javascript" src="js/jquery-1.12.1.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/post.js"></script>
+<script type="text/javascript">
+	function toReply() {
+		$('html, body').animate({
+			scrollTop : $("body").height()
+		}, 'slow');
+		ue.focus();
+	}
+	function createFloor() {
+		var content = $("#ueditor_textarea_editorValue").val();
+		if (!user || !user.login)
+			return formDiv.show("loginDiv");
+		if (content == undefined || content == "") {
+			return toReply();
+		} else {
+			var floor = $("#floor").attr("action", getUrl() + "/floor_createFloor");
+			floor.children("#pid").attr("value", pid);
+			floor.submit();
+		}
+	}
+	function createReply(element) {
+		if (!user || !user.login)
+			return formDiv.show("loginDiv");
+		var content = $(element).siblings("textarea").val();
+		var fid = $(element).parents(".floor").attr("id");
+		if (content == undefined || content == "") {
+			$(element).siblings("textarea").focus();
+			return;
+		} else {
+			$.post(getUrl() + "/reply_createReply", {
+				"fid" : fid,
+				"content" : content
+			}, function(data) {
+				var nowPageEle = $(element).parents(".childs_bottom").find(".now_page");
+				loadReply(fid, nowPageEle ? nowPageEle.text() : 1);
+				$(element).siblings("textarea").val("");
+				$(element).parent().css("display","none");
+			})
+		}
+	}
+</script>
+<body>
+	<div class="right">
+		<ul>
+			<li title="回帖" class="right_div right_post" onclick="toReply();"></li>
+			<li title="刷新" class="right_div right_reflash" onclick="reflash();"></li>
+			<li title="分享" class="right_div right_share"></li>
+			<li title="返回顶部" class="right_div right_top" onclick="toTop();"></li>
+		</ul>
+	</div>
+	<span id="_top"></span>
+	<div class="hidden"></div>
+	<div class="loginDiv formDiv">
+		<form action="" id="login_form">
+			<span class="top">登录账号<i></i>
+			</span> <input id="login_username" class="username  input" name="username" type="text" placeholder="账号"> <input id="login_password"
+				class="password  input" name="password" type="password" placeholder="密码">
+			<div class="middle">
+				<input class="fl check" type="checkbox"><span class="middle_left fl">下次自动登录</span> <a class="middle_right fr" href="#">登录遇到问题</a>
+			</div>
+			<div class="bottom">
+				<span id="login_submit" class="button">登录</span> <a class="fr" href="#">立即注册</a>
+			</div>
+			<span id="msg" class="msg"></span>
+		</form>
+	</div>
+	<div class="registDiv formDiv">
+		<form action="" id="regist_form">
+			<span class="top">注册账号<i></i>
+			</span> <input id="regist_username" class="username input" name="username" type="text" placeholder="账号"> <span id="usernameMsg" class="eMsg"></span>
+			<input id="regist_password" class="password input" name="password" type="password" placeholder="密码"> <span id="passwordMsg"
+				class="eMsg"></span> <input id="regist_repassword" class="username input" name="repassword" type="password" placeholder="确认密码"> <span
+				id="repasswordMsg" class="eMsg"></span> <input id="regist_name" class="name input" name="name" type="text" placeholder="昵称"> <span
+				id="nameMsg" class="eMsg"></span> <input id="regist_email" class="email input" name="email" type="text" placeholder="邮箱"> <span
+				id="emailMsg" class="eMsg"></span>
+			<div class="middle">
+				<input class="fl check" type="checkbox" checked="checked"><span class="middle_left fl">阅读并接受</span> <a class="middle_right fl"
+					href="#">《贴吧协议》</a>
+			</div>
+			<div class="bottom">
+				<span id="regist_submit" class="button">注册</span>
+			</div>
+			<span id="msg" class="msg"></span>
+		</form>
+	</div>
+	<div class="top">
+		<ul class="top_head fr">
+			<!-- 未登录 -->
+			<li class="login head_div fl unlogin"><a id="login" href="#">登录</a></li>
+			<li class="regist head_div fl unlogin"><a id="regist" href="#">注册</a></li>
+
+			<!-- 已登录 -->
+			<li class="login head_div fl logined"><a>欢迎<!-- 用户名 --></a></li>
+			<li class="regist head_div fl logined"><a id="exit" class="" href="#">退出</a></li>
+
+			<li class="buy fl">
+				<div class="head_div">
+					<a class="buy_a" href="#" title="购买商品"></a>
+				</div>
+			</li>
+			<li class="app fl">
+				<div class="head_div">
+					<a class="app_a" href="#" title="下载手机端"></a>
+				</div>
+			</li>
+			<li class="separator fl">|</li>
+			<li class="center fl">
+				<div class="head_div">
+					<a class="center_a" href="#">应用中心</a>
+				</div>
+			</li>
+			<li class="vip fl">
+				<div class="head_div">
+					<a class="vip_a" href="#">会员官网</a>
+				</div>
+			</li>
+			<li class="index fl">
+				<div class="head_div">
+					<a class="index_a" href="index">首页</a>
+				</div>
+			</li>
+		</ul>
+		<div class="search">
+			<div class="search_top"></div>
+			<div class="search_bottom">
+				<input class="search_text fl" type="text"> <input class="search_bar fl" type="button" value="进入贴吧"> <input
+					class="search_all fl" type="button" value="全吧搜索"> <a class="search_high fl" href="#">高级搜索</a>
+			</div>
+		</div>
+	</div>
+	<div class="head">
+		<img class="bar_logo" src="">
+		<div class="head_top">
+			<div class="head_button fr">
+				<a class="check" title="签到" href="#"><span class="check_top fl">02月24日</span><span class="check_bottom fl">漏签<span class="day">0</span>天
+				</span> </a>
+			</div>
+			<div class="desc fl">
+				<div class="desc_top">
+					<h1 class="fl">我的吧</h1>
+					<a class="attention fl" href="#" title="关注"></a>
+					<div class="num fl">
+						<span class="name">关注:</span> <span class="value">12312</span> <span class="name">&nbsp;帖子:</span> <span class="value">123123</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="main">
+		<div class="main_nav">
+			<ul>
+				<li id="posts" class="nav_element fl">看帖</li>
+				<li id="picture" class="nav_element fl">图片</li>
+				<li id="boutique" class="nav_element fl">精品</li>
+				<li id="group" class="nav_element fl">群组</li>
+			</ul>
+		</div>
+		<div class="main_material">
+			<div class="material_top">
+				<div id="top_pages"></div>
+				<div class="top_page administrativePosts-div">
+					<a href="#" class="top_page">帖子管理</a>
+					<ul class="administrativePosts">
+						<li><a href="#">设为精华帖</a></li>
+						<li><a href="#">取消精华帖</a></li>
+						<li><a href="#">置顶主题</a></li>
+						<li><a href="#">取消置顶</a></li>
+						<li><a href="#">设为图片贴</a></li>
+						<li><a href="#">取消图片贴</a></li>
+					</ul>
+				</div>
+				<a id="deletePost" href="#" class="top_page">删除主题</a> <a href="#" class="return fr"> &lt; 返回xx吧 </a>
+
+			</div>
+			<div class="material_floors fl">
+				<div class="floors_top">
+					<span id="pid" style="display: none;"></span>
+					<h2 class="title fl"></h2>
+					<div class="top_buttons fr">
+						<div class="button_div fl">
+							<a href="#" class="button_a">只看楼主</a>
+						</div>
+						<div class="button_div fl">
+							<a href="#" class="button_a">收藏</a>
+						</div>
+						<div class="button_div fl main_reply">
+							<span class="button_a">回复</span>
+						</div>
+					</div>
+				</div>
+				<div id='floors'></div>
+			</div>
+			<div class="material_message fr">
+				<div class="message_div">
+					<div class="vip">会员相关</div>
+				</div>
+				<div class="message_div">
+					<div class="user" style="display: none;">
+						<!-- 登陆显示？ -->
+						<div class="message_sort">我在贴吧</div>
+						<img class="user_img fl" src="">
+						<div class="details fl">
+							<ul>
+								<li class="user_name"><a href="#" class="user_name_a"> </a></li>
+								<li class=""><a href="#" class="user_property"> </a></li>
+								<li class=""><a href="#" class="user_property"> </a></li>
+								<li class="user_money"><span class="user_money_span">12</span><a href="#" class="user_money_a">[获取]</a></li>
+								<li><a href="#" class="user_property appealPost">帖子申诉</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="message_div">
+					<div class="bar">
+						<div class="message_sort">本吧信息</div>
+						<a href="#" class="bar_details">查看详情>></a>
+						<div class="bar_admins">
+							<ul>
+								<li class="bar_admin fl"><img class="admin_img" src="" /> <a class="admin_name" href="#">a</a></li>
+								<li class="bar_admin fl"><img class="admin_img" src="" /> <a class="admin_name" href="#">b</a></li>
+								<li class="bar_admin fl"><img class="admin_img" src="" /> <a class="admin_name" href="#">c</a></li>
+							</ul>
+						</div>
+						<div class="informations">
+							<div class="information">小吧：小吧主共3人</div>
+							<div class="information">
+								会员：<a class="information_a" href="#">呵呵</a>
+							</div>
+							<div class="information">
+								目录：<a class="information_a" href="#">哈哈</a>
+							</div>
+						</div>
+						<div class="methods">
+							<a class="method" href="#">申请小吧主</a> <a class="method" href="#">阅读本吧吧刊</a>
+						</div>
+					</div>
+				</div>
+				<div class="message_div">
+					<div>吧主选择</div>
+				</div>
+				<div class="message_div">
+					<div class="friends">友情贴吧</div>
+				</div>
+				<div class="message_div" style="display: none;">
+					<div class="message_sort">吧务管理</div>
+					<ul class="list">
+						<li class="list_button" onclick="alert('暂未加入该功能');">职业吧主后台</li>
+						<li class="list_button" onclick="toAdmin();">吧务后台</li>
+						<li class="list_button" onclick="alert('暂未加入该功能');">会员中心</li>
+						<li class="list_button" onclick="alert('暂未加入该功能');">管理模式</li>
+						<li class="list_button">设置吧名片</li>
+						<li class="list_button" onclick="alert('暂未加入该功能');">吧主制度</li>
+						<li class="list_button" onclick="">设置头图</li>
+						<li class="list_button" onclick="alert('暂未加入该功能');">会员专属置顶</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="material_bottom material_top">
+			<div id="bottom_pages"></div>
+			<a href="#" class="return fr">&lt; 返回xx吧</a>
+		</div>
+	</div>
+	<div class="foot">
+		<div class="foot_top">
+			<div class="top_head">
+				<div class="chooses"></div>
+			</div>
+			<form id="floor" name="floor" action="/floor_createFloor" method="post">
+				<input id="pid" type="hidden" value="" name="post.pid">
+				<div class="top_content">
+					<script id="editor" type="text/plain" style="min-height: 282px;"></script>
+					<script type="text/javascript" charset="utf-8" src="editor/ueditor.config.js"></script>
+					<script type="text/javascript" charset="utf-8" src="editor/ueditor.all.min.js">
+						
+					</script>
+					<script type="text/javascript" charset="utf-8" src="editor/lang/zh-cn/zh-cn.js"></script>
+					<script type="text/javascript" style="z-index: 1;">
+						var ue = UE.getEditor('editor');
+					</script>
+				</div>
+			</form>
+			<div class="top_buttom">
+				<span class="buttom_a" onclick="createFloor();">发 表</span>
+			</div>
+		</div>
+		<div class="foot_bottom">
+			<p class="bottom_p">
+				©2016 贴吧协议 | <a href="#" class="bottom_a">吧主制度</a> | 意见反馈 | 网络谣言警示
+			</p>
+		</div>
+	</div>
+</body>
+</html>

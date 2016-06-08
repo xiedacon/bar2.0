@@ -1,0 +1,44 @@
+.body .result-table td{
+    vertical-align: top;
+}
+.body .result-table .operation-td{
+    width: 15%;
+}
+.body .result-table .content-td{
+    width: 55%;
+}
+.body .result-table .people-td{
+    width: 15%;
+}
+.body .result-table .operationTime-td{
+    width: 15%;
+}
+.result-table .content-top{
+    padding: 0 15px 0 15px;
+}
+.result-table .content-top:after{
+    display: block;
+    height: 0;
+    content: "";
+    visibility: hidden;
+    clear: both;
+}
+.result-table .content-top .title{
+    color: #398BFC;
+    font-size: 18px;
+}
+.result-table .content-top .username{
+    color: #398BFC;
+    font-size: 16px;
+}
+ .content-top .username i{
+    color: #398BFC;
+    font-size: 16px;
+    font-family: "icomoon";
+}
+.result-table .content-bottom{
+    padding: 0 15px 0 15px;
+}
+.body .result-table .post{
+    height: 200px;
+}
