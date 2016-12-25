@@ -1,339 +1,283 @@
-//操作表单div
-function FormDiv() {
-	// 最前显示的窗口，默认undefined
-	this._show;
-	// 打开
-	this.show = function(name) {
-		var height = $(window).height();
-		$(".hidden").css({
-			'display' : 'block',
-			'height' : height
-		});
-		$("." + name).css({
-			'display' : 'block'
-		});
-		$("." + name + " .username")[0].focus();
-		this._show = name;
-	}
-	// 隐藏
-	this.hidden = function() {
-		$(".hidden").css({
-			'display' : 'none'
-		})
-		$(".formDiv").css({
-			'display' : 'none'
-		})
-		$(".formDiv input").val("");
-		$(".formDiv .msg").text("");
-		$(".formDiv .eMsg").text("").css("display", "none");
-		this._show = undefined;
-	}
-}
+(function() {
 
-function Validator() {
-
-	// 通用校验处理器
-	this.verify = function(name, element) {
-		switch (name) {
-			case "username" :
-				if (this.username(element.value, "#usernameMsg")) {
-					hiddenMsg("#usernameMsg");
-				}
-				break;
-			case "password" :
-				if (this.password(element.value, "#passwordMsg")) {
-					hiddenMsg("#passwordMsg");
-				}
-				break;
-			case "repassword" :
-				var password = $(element).siblings(".password").val();
-				if (this.repassword(password, element.value, "#repasswordMsg")) {
-					hiddenMsg("#repasswordMsg");
-				}
-				break;
-			case "name" :
-				if (this.name(element.value, "#nameMsg")) {
-					hiddenMsg("#nameMsg");
-				}
-				break;
-			case "email" :
-				if (this.email(element.value, "#emailMsg")) {
-					hiddenMsg("#emailMsg");
-				}
-				break;
-			default :
-				return "尚不支持的方法";
-		}
+	var modules = new Array();
+	function ModuleManager() {
 	}
-
-	// 登录表单前台校验
-	this.loginForm = function() {
-		var username = $("#login_username").val();
-		var password = $("#login_password").val();
-		return this.username(username, ".msg") && this.password(password, ".msg");
+	ModuleManager.prototype.get = function(name) {
+		return modules[name];
 	}
-	// 注册表单前台校验
-	this.registForm = function() {
-		var username = $("#regist_username").val();
-		var password = $("#regist_password").val();
-		var repassword = $("#regist_repassword").val();
-		var name = $("#regist_name").val();
-		var email = $("#regist_email").val();
-		return this.username(username, "#usernameMsg") && this.password(password, "#passwordMsg")
-				&& this.repassword(password, repassword, "#repasswordMsg") && this.name(name, "#nameMsg") && this.email(email, "#emailMsg");
+	ModuleManager.prototype.addModule = function(key, value) {
+		modules[key] = value;
 	}
+	var moduleManager = new ModuleManager();
 
-	// 校验用户名
-	this.username = function(username, msgEle) {
-		return required(username, "用户名不能为空!", msgEle) && length(username, 5, 10, "用户名长度应在5~10之间!", msgEle);
-	};
-	// 校验密码
-	this.password = function(password, msgEle) {
-		return required(password, "密码不能为空!", msgEle) && length(password, 5, 10, "密码长度应在5~10之间!", msgEle);
-	};
-	// 校验确认密码
-	this.repassword = function(password, repassword, msgEle) {
-		return required(repassword, "再次密码不能为空!", msgEle) && than(password, repassword, "两次输入的密码不一致!", msgEle);
-	};
-	// 校验昵称
-	this.name = function(name, msgEle) {
-		return required(name, "昵称不能为空!", msgEle) && length(name, 0, 10, "昵称长度不能超过10个字符!", msgEle);
-	};
-	// 校验email
-	this.email = function(email, msgEle) {
-		return required(email, "邮箱不能为空!", msgEle) && _email(email, "邮箱格式错误!", msgEle);
-	};
+	var $userDiv = $("#userDiv");
+	function UserManager() {
+	}
+	UserManager.prototype.setUser_regist = function(user) {
+		sessionStorage.setItem("regist_user", JSON.stringify(user));
+		return this;
+	}
+	UserManager.prototype.getUser_regist = function() {
+		return JSON.parse(sessionStorage.getItem("regist_user"));
+	}
+	UserManager.prototype.removeUser_regist = function() {
+		sessionStorage.removeItem("regist_user");
+	}
+	UserManager.prototype.setUser = function(user, flag) {
+		sessionStorage.setItem("user", JSON.stringify(user));
 
-	// 必须性校验
-	var required = function(verifyValue, result, msgEle) {
-		if (verifyValue == "") {
-			msg(result, msgEle);
-			return false;
+		if (flag) {// 自动登录选项相关
+			localStorage.setItem("login_auto", true);
+			localStorage.setItem("user", JSON.stringify(user));
 		} else {
-			return true;
+			localStorage.setItem("login_auto", false);
+			localStorage.removeItem("user");
 		}
+		return this;
 	}
-	// 长度校验
-	var length = function(verifyValue, min, max, result, msgEle) {
-		if (verifyValue.length < min || verifyValue.length > max) {
-			msg(result, msgEle);
-			return false;
+	UserManager.prototype.getUser = function() {
+		return JSON.parse(sessionStorage.getItem("user"));
+	}
+	UserManager.prototype.getUserId = function() {
+		var user = window.UserManager.getUser();
+		if (user) {
+			return user.id;
 		} else {
-			return true;
+			return undefined;
 		}
 	}
-	// 相同性校验
-	var than = function(verifyValue1, verifyValue2, result, msgEle) {
-		if (verifyValue1 == verifyValue2) {
-			return true;
+	UserManager.prototype.init = function() {
+		if (localStorage.getItem("login_auto")) {
+			sessionStorage.setItem("user", localStorage.getItem("user"));
+		}
+		var user = window.UserManager.getUser();
+		if (user) {
+			window.UserManager.login();
 		} else {
-			msg(result, msgEle);
-			return false;
-		}
-	}
-	// email格式校验
-	var _email = function(verifyValue, result, msgEle) {
-		reg = /^([a-zA-Z0-9]+[_|\-|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\-|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/gi;
-		if (reg.test(verifyValue)) {
-			return true;
-		} else {
-			msg(result, msgEle);
-			return false;
-		}
-	}
-}
+			removeUser();
+			// 第三方登录，暂时先这样
+			if (location.search && location.search !== "") {
+				var params = location.search.substring(1).split("&");
+				var id = params[0];
+				var name = params[1];
+				$.ajax({
+					url : "user/" + id,
+					type : "GET",
+					dataType : "json",
+					success : function(data) {
+						window.UserManager.setUser_regist(data);
 
-// 信息提示
-function msg(date, msgEle) {
-	$(".formDiv " + msgEle).text(date);
-	$(".formDiv " + msgEle).css("display", "block");
-}
-
-function hiddenMsg(name) {
-	$(".formDiv " + name).text("");
-	$(".formDiv " + name).css("display", "none");
-}
-
-function reflash() {
-	location.reload(true);
-}
-function toTop() {
-	$("html,body").animate({
-		scrollTop : 0
-	}, 'slow');
-}
-function toPost() {
-	$("#post .title").focus();
-}
-
-function getUrl() {
-	var pathname = window.location.pathname.substring(1);
-	return window.location.protocol + "//" + window.location.host + "/" + pathname.substring(0, pathname.indexOf("/"));
-}
-
-function toAdmin() {
-	if (user.login && user.isAdmin){
-		$.post(getUrl() + "/admin/admin_toBackStage", {}, function(data) {
-			if (!data || data == "") {
-				alert("没有足够的权限");
-				return;
+						if (!name || name === "") {
+							MMR.get("username").show();
+						} else {
+							window.UserManager.login();
+						}
+					},
+					error : function(e) {
+						console.error(e);
+					}
+				});
+				history.replaceState(null, null, location.href.split("?")[0]);
 			}
-			window.location.href = data;
-		})
-	}else{
-		formDiv.show("loginDiv");
+		}
 	}
-}
-var user;
-var formDiv = new FormDiv();
-var validator = new Validator();
+	UserManager.prototype.logout = function() {
+		removeUser();
+		router.startRouter("index");
+		MMR.get("simpleMsg").setData({
+			"status" : "info",
+			"content" : "退出成功"
+		}).show();
+	}
+	var firstFlag = true;
+	UserManager.prototype.login = function() {
+		var user = window.UserManager.getUser();
+		$userDiv.find(".username").empty().append("<img src='" + user.icon + "'>" + user.name + "<i></i>");
+		unbindEvents();
+		bindEvents('nav_login');
 
-$(document).ready(function() {
+		$("#myMusic").attr({
+			"data-href" : "myMusic?userId=" + user.id,
+			"onclick" : "jump(this);"
+		})
 
-	// 登录/注册开始
-	// 打开
-	$("#login").click(function() {
-		formDiv.show("loginDiv");
-	});
-	$("#regist").click(function() {
-		formDiv.show("registDiv");
-	});
-	// 关闭按钮
-	$(".formDiv .top i").click(function() {
-		formDiv.hidden();
-	});
-	// 键盘事件
-	$(document).keydown(function(e) {
-		if (e && formDiv._show && e.keyCode == 27) {// Esc
-			formDiv.hidden();
-		}
-		if (e && formDiv._show && e.keyCode == 13) {// Enter
-			var inputs = $("." + formDiv._show).find("input[type!='checkbox']");
-			for (var i = 0; i < inputs.length; i++) {
-				if (!inputs.eq(i).val() || inputs.eq(i).val() == "") {
-					inputs.eq(i).focus();
-					return;
-				}
-			}
-			$("." + formDiv._show).find(".button").click();
-		}
-	});
-	// 登录提交
-	$("#login_submit").click(function() {
-		if (validator.loginForm()) {
-			$.post(getUrl() + "/user_login", $("#login_form").serialize(), function(data) {
-				var value = JSON.parse(data);
-				if (value.type == "success") {
-					window.localStorage.setItem("user", JSON.stringify(value.user));
-					window.sessionStorage.setItem("user", JSON.stringify(value.user));
-					window.sessionStorage.setItem("date", JSON.stringify(value.date));
-					reflash();
-				} else {
-					msg(value.error, ".msg");
-				}
-			})
-		}
-	})
-	// 注册提交
-	$("#regist_submit").click(function() {
-		var usernameMsg = $("#usernameMsg").text();
-		if ((usernameMsg == undefined || usernameMsg == "") && validator.registForm()) {
-			$.post(getUrl() + "/user_regist", $("#regist_form").serialize(), function(data) {
-				var value = JSON.parse(data);
-				if (value.type == "success") {
-					window.localStorage.setItem("user", JSON.stringify(value.user));
-					window.sessionStorage.setItem("user", JSON.stringify(value.user));
-					window.sessionStorage.setItem("date", JSON.stringify(value.date));
-					reflash();
-				} else {
-					msg(value.error, ".msg");
-				}
-			})
+		if (firstFlag) {
+			firstFlag = false;
 			return;
 		}
-	})
 
-	// 后台返回消息提示
+		router.startRouter("index");
+	}
+	function removeUser() {
+		sessionStorage.removeItem("user");
+		localStorage.removeItem("user");
+		localStorage.removeItem("login_auto");
 
-	$(".formDiv .input").focus(function() {
-		msg("", ".msg");
-	})
-	$(".registDiv .input").blur(function() {
-		var name = $(this).attr("name");
-		validator.verify(name, $(this)[0]);
-	})
+		$userDiv.find(".username").empty().text("登录");
+		unbindEvents();
+		bindEvents('nav_logout');
+	}
+	function unbindEvents() {
+		$userDiv.unbind() //
+		.find(".user_nav").css("display", "none");
+	}
+	function bindEvents(eleName) {
+		$userDiv.hover(function() {
+			$(this).children('.' + eleName).stop(true).slideDown(300);
+		}, function() {
+			$(this).children('.' + eleName).stop(true).slideUp(300);
+		});
+	}
 
-	// ajax校验用户名
-	$("#regist_username").blur(function() {
-		$.post(getUrl() + "/user_verifyUsernameAjax", {
-			"username" : $("#regist_username").val()
-		}, function(date) {
-			var result = JSON.parse(date);
-			if (result.type == "success") {
-			} else {
-				msg(result.error, "#usernameMsg");
-			}
-		})
-	})
-	// 登录/注册结束
-
-	// 退出开始
-	$("#exit").click(function() {
-		$.post(getUrl() + "/user_exit", {}, function(date) {
-			window.localStorage.removeItem("user");
-			window.sessionStorage.removeItem("user");
-			window.sessionStorage.removeItem("date");
-			$(".unlogin").css("display", "block");
-			$(".logined").css("display", "none");
-			$(".message_div .user").css("display", "none");
-			$(".message_div:last").css("display", "none");
-			user = null;
-		})
-	})
-	// 退出结束
-
-	// 假登录
-	if (window.localStorage.user) {
-		user = JSON.parse(window.localStorage.user);
-		user.login = false;
-		if (window.sessionStorage.user) {
-			user = JSON.parse(window.sessionStorage.user);
-			var time = (new Date().getTime() - JSON.parse(window.sessionStorage.date).time) / 1000 / 60; // 已登录时间，30min后过期
-			if (time > 30) {
-				window.sessionStorage.removeItem("user");
-				window.sessionStorage.removeItem("date");
-			} else {
-				user.login = true;
-			}
+	window.limitStringLength = function limitStringLength(content, length) {
+		if (!content) {
+			return;
 		}
 
-		$(".unlogin").css({
-			"display" : "none"
-		});
-		$(".logined").css({
-			"display" : "block"
-		});
-		$(".logined").eq(0).children("a").text("欢迎：" + user.name);
-		var userDiv = $(".message_div .user").css("display", "block");
-		userDiv.children("img").attr("src", getUrl() + "/image/" +  user.icon);
-		userDiv.find(".user_name_a").text(user.username);
-		userDiv.find(".user_property").eq(0).text(user.position.name);
-		userDiv.find(".user_property").eq(1).text(user.level.lname);
-		if (user.login && user.isAdmin)
-			$(".message_div:last").css("display", "block");
+		var num = content.split(/\w|\s/).length - 1;
+		var realLength = (content.length - num) * 2 + num;
+		if (realLength > length * 2) {
+			var _length = length * 2;
+			var i = 0;
+			var _content = "";
+			while (_length > 0) {
+				if (content.charAt(i).match(/\w|\s/)) {
+					_length -= 1;
+				} else {
+					_length -= 2;
+				}
+				_content += content.charAt(i);
+				i++;
+			}
+			return _content + "..";
+		} else {
+			return content;
+		}
 	}
-})
+	window.UserManager = new UserManager();
 
-function toJSONDate(date){
-	var obj = new Object();
-	obj.date = date.getDate();
-	obj.day = date.getDay();
-	obj.hours = date.getHours();
-	obj.minutes = date.getMinutes();
-	obj.month = date.getMonth();
-	obj.seconds = date.getSeconds();
-	obj.time = date.getTime();
-	obj.timezoneOffset = date.getTimezoneOffset();
-	obj.year = date.getYear();
-	return JSON.stringify(obj);
-}
+	// $yyyy-$MM-$dd-$SS $HH:$mm:$ss:$SS
+	window.DateFormatter = function DateFormatter(regExpString) {
+		var array = new Array();
+		var str = regExpString;
+		str = parse(str);
+
+		function parse(regExpString) {
+			var possibleValues = new Array();
+			var str = regExpString;
+
+			possibleValues.splice(0, possibleValues.length, 2, 4);
+			str = parse_base("y", "year", str, possibleValues);
+
+			possibleValues.splice(0, possibleValues.length, 2);
+			str = parse_base("M", "month", str, possibleValues);
+
+			possibleValues.splice(0, possibleValues.length, 2);
+			str = parse_base("d", "day", str, possibleValues);
+
+			possibleValues.splice(0, possibleValues.length, 2);
+			str = parse_base("H", "hour", str, possibleValues);
+
+			possibleValues.splice(0, possibleValues.length, 2);
+			str = parse_base("m", "minute", str, possibleValues);
+
+			possibleValues.splice(0, possibleValues.length, 2);
+			str = parse_base("s", "seconds", str, possibleValues);
+			
+			return str;
+		}
+
+		function parse_base(part, total, regExpString, possibleValues) {
+			var num = regExpString.split(part).length - 1;
+			var str = regExpString;
+			array[total] = new DateItem();
+
+			for (var i = 0; i < possibleValues.length; i++) {
+				if (num === possibleValues[i] && str.split(increaseStr(part, num)).length === 2) {
+					var _str = increaseStr(part, num);
+					str = str.replace(_str, "$" + _str);
+					array[total].regExp = "$" + _str;
+					array.length += 1;
+					return str;
+				}
+				if (num === 0) {
+					return str;
+				}
+			}
+			alert("格式错误：" + regExpString);
+			throw "格式错误：" + regExpString;
+		}
+
+		function increaseStr(str, num) {
+			var result = "";
+			if (num === 0) {
+				return result;
+			}
+			for (var i = 0; i < num; i++) {
+				result += str;
+			}
+			return result;
+		}
+
+		function DateItem(regExp, num) {
+			this.regExp = regExp;
+			this.num = num;
+		}
+
+		this.format = function(time) {
+			var date = new Date();
+			date.setTime(time);
+			array["year"].num = date.getFullYear();
+			array["month"].num = date.getMonth() + 1;
+			array["day"].num = date.getDate();
+			array["hour"].num = date.getHours();
+			array["minute"].num = date.getMinutes();
+			array["seconds"].num = date.getSeconds();
+			return replace(array, str);
+		}
+
+		function replace(array, str) {
+			var _str = str;
+			for ( var i = 0 in array) {
+				var num = "";
+				var regExp = array[i].regExp;
+				if (regExp) {
+					if (array[i].num || array[i].num === 0) {
+						num = array[i].num.toString();
+						if (num.length < regExp.length - 1) {// 时分秒为0
+							num = increaseStr("0", regExp.length - 1 - num.length) + num;
+						} else {// 年只有两位
+							num = num.substring(num.length - regExp.length + 1);
+						}
+					}
+					_str = _str.replace(regExp, num);
+				}
+			}
+			return _str;
+		}
+	}
+
+	window.ModuleManager = moduleManager;
+	window.MMR = moduleManager;
+
+	var configs = new Array();
+	configs.push("js/music.js");
+	configs.push("js/modules.js");
+	configs.push("js/MethodStack.js");
+
+	for (var i = 0; i < configs.length; i++) {
+		loadScript(configs[i]);
+	}
+
+	function loadScript(src) {
+		var script = document.createElement("script");
+		script.src = src;
+		script.onload = function() {
+			document.documentElement.removeChild(script);
+			script = null;
+		}
+		document.documentElement.appendChild(script);
+	}
+
+}())

@@ -1,0 +1,48 @@
+<div>
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="page-header">修改歌手</h1>
+		</div>
+		<!-- /.col-lg-12 -->
+	</div>
+	<!-- /.row -->
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-default">
+				<!-- /.panel-heading -->
+				<div class="panel-body">
+					<form class="col-lg-6" action="" method="post" role="form">
+						<div class="form-group">
+							<label>歌手名：</label> <input id="name" type="text" name="name" class="form-control" value="" />
+							<p class="help-block">必填，歌手名不能包括特殊字符</p>
+						</div>
+						<div class="form-group">
+							<label>头像：</label> <input id="icon" type="file" name="icon" class="form-control" value="" />
+							<p class="help-block">必填，文件为jpg格式</p>
+						</div>
+						<div class="form-group">
+							<label>描述：</label> <input id="remark" type="text" name="remark" class="form-control" value="" />
+							<p class="help-block">可选，不能超过20个字</p>
+						</div>
+						<div class="form-group">
+							<label>歌手分类：</label> 
+							<select class="form-control" name="classifyId" id="classifyId">
+							</select>
+							<p class="help-block">必填</p>
+						</div>
+						<div class="form-group">
+							<label>简介：</label>
+							<textarea class="form-control" id="introduction" name="introduction" rows="5" cols="" style="resize: none;"></textarea>
+							<p class="help-block">可选</p>
+						</div>
+						<button id="submit" type="button" class="btn btn-info">修改</button> 
+						<button id="cancel" type="button" class="btn btn-default">取消</button> 
+					</form>
+				</div>
+				<!-- /.panel-body -->
+			</div>
+			<!-- /.panel -->
+		</div>
+		<!-- /.col-lg-12 -->
+	</div>
+</div>

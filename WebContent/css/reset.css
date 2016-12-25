@@ -25,6 +25,7 @@ i,
 iframe{
     margin:0;
     padding:0;
+    cursor: inherit;
 }
 table {
     border-collapse:collapse;
@@ -35,7 +36,6 @@ iframe {
     border:0;
 }
 em,
-strong,
 th {
     font-style:normal;
     font-weight:normal;
@@ -66,11 +66,19 @@ select {
     font-family:inherit;
     font-size:inherit;
     font-weight:inherit;
+    outline:none;
     *font-size:100%; /*to enable resizing for IE*/
 }
-a ,a:visited,i{
+a ,a:visited,i,s{
     text-decoration: none;
     color:#444444
+}
+a,
+a:visited,
+span,
+i,
+p{
+    color: inherit;
 }
 input,
 button {
@@ -78,4 +86,8 @@ border:none;
 }
 i {
     font-style: normal;
+	-webkit-user-select: none;
+}
+a{
+	cursor: pointer;
 }

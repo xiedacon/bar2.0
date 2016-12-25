@@ -1,143 +1,351 @@
-// 加载内容
-var textResolver = new TextResolver();
-function loadMaterial(name, method, page, flag) {
-	window.sessionStorage.date = toJSONDate(new Date());
-	
-	var method1 = window.location.search;
-	if (method1 == "" || method1 == "?" + method) {
-		window.history.replaceState({}, 0, "index?" + method);
-	} else {
-		window.history.pushState({}, 0, "index?" + method);
+(function() {
+	$.ajax({
+		url : "json/index",
+		type : "GET",
+		dataType : "json"
+	}).done(function(data){
+		loadSongMenuList(data);
+		loadSongMenuSecondTagList(data);
+		loadAlbums(data);
+		loadUsers(data);
+		loadSongLists(data);
+	});
+
+	function loadSongMenuSecondTagList(data){
+		var template = '{{each songMenuTags as tag}}'
+		+                '<li>'
+		+	                 '<a href="#songMenus?secondTagId={{tag.id}}">{{tag.name}}</a>'
+		+                '</li>'
+		+              '{{/each}}';
+
+		document.querySelector("ul#songMenuSecondTagList").innerHTML = Template.compile(template)(data);
 	}
-	$.post(getUrl() + "/" + method + "?page=" + page, {}, function(data) {
-		var pageBean = JSON.parse(data);
-		var beanList = pageBean.beanList;
 
-		var posts = $("#_posts");
-		posts.empty();
+	function loadSongMenuList(data){
+		var template = '{{each songMenus as songMenu}}'
+		+                '<li id="{{songMenu.id}}" class="song">'
+		+               	 '<div class="image">'
+		+		                 '<a href="#songMenu?id={{songMenu.id}}">'
+		+                      '<img alt="{{songMenu.name}}" src="{{songMenu.icon}}" title="{{songMenu.name}}">'
+		+                    '</a>'
+		+                    '<div class="image_bottom">'
+		+                      '<i></i> <span class="num">{{songMenu.playNum}}</span>'
+		+                      '<i class="playthis" title="播放" onclick="MMR.get(\'music\').batchAddThenPlay(\'songMenuId\',\'{{songMenu.id}}\')"></i>'
+		+                    '</div>'
+		+                  '</div>'
+		+                '<a href="#songMenu?id={{songMenu.id}}" class="name" title="{{songMenu.name}}">{{songMenu.name | lengthLimit:\'20\'}}</a>'
+		+              '</li>'
+		+            '{{/each}}';
 
-		posts.siblings().remove(".nav");
-		if (method == "post_boutique") {
-			posts.parent().prepend("<ul class='nav'></ul>");
-			var nav = posts.siblings(".nav");
-			nav.append("<li class='nav_li'><span class='nav_element'>全部</span></li>").append(
-					"<li class='nav_li'><a href='#' class='nav_element'>师傅好</a></li>");
-		}
+		document.querySelector("ul#songMenuList").innerHTML = Template.compile(template)(data);
+	}
 
-		for (var i = 0; i < pageBean.beanList.length; i++) {
-			var post = posts.append("<li id=" + beanList[i].pid + " class='post'></li>").children("#" + beanList[i].pid);
-			post.append("<div class='post_top'></div>").append("<div class='post_bottom'></div>");
+	function loadAlbums(data) {
+		var source1 = {
+			albums : []
+		}, //
+		source2 = {
+			albums : []
+		};
 
-			var top = post.children(".post_top");
-			top.append("<div class='num fl'></div>").append("<div class='title fl'></div>").append("<div class='user fr'></div>");
-			top.children(".num").append("<span class='num_span'>" + beanList[i].num + "</span>")
-			top.children(".title").append(
-					"<a target='_blank' href=" + getUrl() + "/post_toPost?post.pid=" + beanList[i].pid + " class='title_a' title="
-							+ beanList[i].title + ">" + beanList[i].title + " </a>")
-			top.children(".user").append("<a href='' class='user_a'>" + beanList[i].owner.name + "</a>").append("<img src=''>");
-
-			var bottom = post.children(".post_bottom");
-			bottom = bottom.append("<div class='desc'></div>").children(".desc");
-			var user = bottom.append("<div class='user fr'></div>").children(".user");
-			user.append("<a href='#' class='user_a fl'>" + beanList[i].lastUser.name + "</a> ").append(
-					"<span class='user_span fr' title='最后回复时间'>" + beanList[i].ldate.hours + ":" + beanList[i].ldate.minutes + "</span>");
-
-			var content = beanList[i].content;
-			var span = bottom.append("<span class='desc_span fl'></span>").children(".desc_span")[0];
-			textResolver.resolve(content, span);
-
-		}
-
-		var pages = $("#pages");
-		pages.empty();
-
-		if (pageBean.page > 1) {
-			pages.append("<li class='fl page_first page_div' data-page=" + 1 + ">首页</li>");
-			pages.append("<li class='fl page_previous page_div' data-page=" + (pageBean.page - 1) + ">上一页</li>")
-		}
-
-		var begin = pageBean.page - 4;
-		var end = pageBean.page + 5;
-		if (pageBean.page < 5)
-			begin = 1;
-		if (pageBean.totalPage < 10 || pageBean.page + 5 > pageBean.totalPage) {
-			end = pageBean.totalPage;
-		} else if (pageBean.page < 5) {
-			end = 10;
-		}
-		for (var i = begin; i <= end; i++) {
-			pages.append(i == pageBean.page
-					? ("<li class='fl page_now'>" + i + "</li>")
-					: ("<li class='fl page_div' data-page='" + i + "'>" + i + "</li>"));
-		}
-
-		if (pageBean.page != pageBean.totalPage) {
-			pages.append("<li class='fl page_next page_div' data-page=" + (pageBean.page + 1) + ">下一页</li>").append(
-					"<li class='fl page_end page_div' data-page=" + pageBean.totalPage + ">尾页</li>");
-		}
-
-		pages.find("li").click(function() {
-			loadMaterial("posts", "post_findByPage", $(this).attr("data-page"));
+		data.albums.forEach(function(album,index){
+			if(index > 4){
+				source2.albums.push(album);
+			}else{
+				source1.albums.push(album)
+			}
 		})
 
-		posts.siblings(".posts_bottom").find(".postNum").text(pageBean.totalCount);
+		var template = '{{each albums as album}}'
+		+              '<li class="album">'
+		+	               '<div class="image">'
+		+		               '<a href="#album?id={{album.id}}">'
+		+			               '<img src="{{album.icon}}" title="{{album.name}}" alt="{{album.name}}">'
+		+                  '</a>'
+		+		             '<div class="image_left">'
+		+			             '<span class="circle"></span> <span class="rectangle"></span> <span class="triangle"></span>'
+		+		             '</div>'
+		+		             '<i class="play" title="播放" onclick="MMR.get(\'music\').batchAddThenPlay(\'albumId\',\'{{album.id}}\')"></i>'
+		+	             '</div>'
+		+	             '<a title="{{album.name}}" class="name" href="#album?id={{album.id}}">{{album.name | lengthLimit:\'6\'}}</a>'
+		+		           '<a title="{{album.singerName}}"class="songer" href="#singer?id={{album.singerId}}">{{album.singerName | lengthLimit:\'6\'}}</a>'
+		+						 '</li>'
+		+            '{{/each}}';
 
-	});
-	$("#" + name).siblings().removeClass("opt");
-	$("#" + name).addClass('opt');
-	if (!flag) {
-		$('html, body').animate({
-			scrollTop : $("body > .top").height() + $(".head").height()
-		}, 'slow');
+		document.querySelector("ul#albumList1").innerHTML = Template.compile(template)(source1);
+		document.querySelector("ul#albumList2").innerHTML = Template.compile(template)(source2);
+		albumDiv.init();
 	}
-}
 
-function TextResolver() {
-	this.resolve = function(text, ele) {
-		var span = $(ele);
-		var content = text;
-		var images = new Array();
-		var content1 = findImages(content, images);
-		// 将富文本转换为文本
-		content1 = span.html(content1).text();
-		// 设置文本最长显示长度
-		if (content1.length > 35) {
-			span.text(content1.substring(0, 35) + "...")
-		}
-		if (images.length > 0) {
-			var imagesBox = span.parents(".desc").append("<div class='desc_bottom'></div>").find(".desc_bottom");
-			// 对图片进行调整
-			// 数量
-			if (images.length > 3) {
-				images = new Array(images[0], images[1], images[2]);
+	function loadUsers(data){
+		var template = `{{each users as user}}
+		<li>
+			<a href="#home?id={{user.id}}">
+				<img src="{{user.icon}}" title="{{user.name}}" alt="{{user.name}}">
+				<p>
+					<span class="name" title="{{user.name}}">{{user.name | lengthLimit:'9'}}</span>
+					<span class="desc" title="{{user.singerName}}">{{user.introduction | lengthLimit:'9'}}</span>
+				</p>
+			</a>
+		</li>
+		{{/each}}`;
+
+		document.querySelector("ul#userList").innerHTML = Template.compile(template)(data);
+	}
+
+	function loadSongLists(data) {
+		var template = `{{each songLists as songList}}
+		<li id="{{songList.id}}">
+			<ul>
+
+			</ul>
+		</li>
+		{{/each}}`;
+
+		var songListsEle = document.querySelector("ul#songLists");
+		songListsEle.innerHTML = Template.compile(template)(data);
+		var songListEles = songListsEle.querySelectorAll("ul");
+		document.querySelectorAll(".head_bottom .subnav li")[1].children[0].href = "#songList?songListId=" + data.songLists[0].id;
+		document.querySelector(".lists .more").href = "#songList?songListId=" + data.songLists[0].id;
+
+		data.songLists.forEach(function(songList, index){
+			loadSongs(songList, songListEles[index]);
+		});
+	}
+	function loadSongs(songList, songListEle) {
+		var template = `<li>
+			<a href="#songList?id={{id}}">
+				<img title="{{name}}" src="{{icon}}" alt="{{name}}">
+			</a>
+			<div class="right">
+				<a href="#songList?id={{id}}">
+					<h3 title="{{name}}">{{name}}</h3>
+				</a>
+				<i class="play" title="播放" style="-webkit-user-select: none;" onclick="MMR.get('music').batchAddThenPlay('songListId','{{id}}')"></i>
+				<!-- <i class="collection" title="收藏" style="-webkit-user-select: none;"></i> -->
+			</div>
+		</li>
+		{{each songs as song index}}
+		<li id={{song.id}} class="{{if index%2==0}}odd{{else}}even{{/if}}">
+			<i class="num" style="-webkit-user-select: none;">{{song.rank}}</i>
+			<a title="{{song.name}}" class="name" href="#song?id={{song.id}}">{{song.name | lengthLimit:'13'}}</a>
+			<span class="hidden">
+				<i class="play" title="播放" onclick="MMR.get('music').addThenPlay('{{song.id}}');"></i>
+				<i class="add" title="添加到播放列表" onclick="MMR.get('music').add('{{song.id}}');"></i>
+				<i class="collection" title="收藏" onclick="MMR.get('collection').collect('{{song.id}}');"></i>
+			</span>
+		</li>
+		{{/each}}
+		<li>
+			<a class='all' href='#songList?id={{id}}'>查看全部></a>
+		</li>`;
+		$.ajax({
+			url : "song/songListId_" + songList.id+ "/10",
+			type : "GET",
+			dataType : "json",
+			success : function(data) {
+				process(data);
+				songList.songs = data.data;
+				songListEle.innerHTML = Template.compile(template)(songList);
 			}
-			// 将图片添加至指定位置
-			imagesBox.html(images);
-			// 尺寸
-			for (var j = 0; j < imagesBox.children().size(); j++) {
-				changeImage(imagesBox.children()[j]);
+		})
+	}
+
+	var albumDiv = new function() {
+		this.init = function() {
+			$("#albumDiv .previous").click(function(event) {
+				changeAlbum(true);
+			});
+			$("#albumDiv .next").click(function(event) {
+				changeAlbum(false);
+			});
+		}
+		this.unbindEvent = function() {
+			$("#albumDiv .previous").unbind('click');
+			$("#albumDiv .next").unbind('click');
+		}
+
+		function changeAlbum(flag) {
+			albumDiv.unbindEvent();
+			var $hidden = $("#albumDiv ul[style]");
+			var $visible = $("#albumDiv ul").not($hidden[0]);
+			if (flag) {
+				$hidden.css('left', '-100%').animate({
+					'left' : '0%'
+				}, 1000);
+				$visible.animate({
+					'left' : '100%'
+				}, 1000, function() {
+					$hidden.removeAttr('style');
+					$visible.css('left', '100%');
+					albumDiv.init();
+				});
+			} else {
+				$hidden.animate({
+					'left' : '0%'
+				}, 1000);
+				$visible.animate({
+					'left' : '-100%'
+				}, 1000, function() {
+					$hidden.removeAttr('style');
+					$visible.css('left', '100%');
+					albumDiv.init();
+				});
 			}
 		}
 	}
-	// 查找富文本中的所有图片
-	var findImages = function(content, images) {
-		var begin = content.indexOf("<img");
-		if (begin < 0) {
-			return content;
+
+	var imageDiv = new function() {
+		this.unbind = function() {
+			$("#image_before").unbind();
+			$("#image_after").unbind();
 		}
-		var content1 = content.substring(begin);
-		var end = content1.indexOf(">") + 1;
-		var image = content1.substring(0, end);
-		images[images.length] = image;
-		content1 = content.substring(0, begin) + content1.substring(end);
-		return findImages(content1, images);
+
+		function autoChange() {
+			// console.log(new Date())
+			imageDiv.calculateImage($('#image_after').siblings('ul')[0], 'next');
+		}
+		this.init = function() {
+			$("#image_before").click(function(event) {
+				imageDiv.calculateImage($(this).siblings('ul')[0], 'previous');
+			});
+			$("#image_after").click(function(event) {
+				imageDiv.calculateImage($(this).siblings('ul')[0], 'next');
+			});
+			clearInterval(sessionStorage.getItem("image_interval_id"));
+			sessionStorage.setItem("image_interval_id", setInterval(autoChange, 3000));
+		}
+		this.calculateImage = function(imageEle, direction) {
+			var imgs = $(imageEle)[0];
+			var now = $(imageEle).children('.now').index();
+			if (direction == 'previous') {
+				now--;
+			} else {
+				now++;
+			}
+			var next = now + 1;
+			var previous = now - 1;
+			if (direction == 'previous') {
+				if (now < 0) {
+					now = 4;
+					next = 0;
+					previous = now - 1;
+				} else if (now == 0) {
+					previous = 4;
+				}
+				previousImage(imgs, previous, now, next);
+			} else {
+				if (now > 4) {
+					now = 0;
+					next = now + 1;
+					previous = 4;
+				} else if (now == 4) {
+					next = 0;
+				}
+				nextImage(imgs, previous, now, next);
+			}
+		}
+
+		function nextImage(imgs, previous, now, next) {
+			changePoint($(imgs).siblings('ul[class=points]')[0], now);
+			changeImage(imgs, {
+				'expr' : 'next',
+				'index' : now
+			}, {
+				'expr' : 'now',
+				'left' : '20%',
+				'index' : previous,
+				'expr_after' : 'previous'
+			}, {
+				'expr' : 'previous'
+			}, {
+				'index' : next,
+				'left_before' : '85%',
+				'left_after' : '80%',
+				'expr_after' : 'next'
+			});
+		}
+		function previousImage(imgs, previous, now, next) {
+			changePoint($(imgs).siblings('ul[class=points]')[0], now);
+			changeImage(imgs, {
+				'expr' : 'previous',
+				'index' : now
+			}, {
+				'expr' : 'now',
+				'left' : '80%',
+				'index' : next,
+				'expr_after' : 'next'
+			}, {
+				'expr' : 'next'
+			}, {
+				'index' : previous,
+				'left_before' : '15%',
+				'left_after' : '20%',
+				'expr_after' : 'previous'
+			});
+		}
+		function changePoint(points, now) {
+			$(points).children().removeAttr('class').eq(now).addClass('point_now');
+		}
+		function changeImage(imgs, big, small, hidden, visible) {
+			imageDiv.unbind();
+			var $imgs = $(imgs);
+			$imgs.children('.' + hidden.expr).children('img').css('z-index', '1').stop(true).animate({
+				'left' : '50%',
+				'width' : '20%'
+			}, 700);
+			$imgs.children('.' + small.expr).children('img').css('z-index', '2').stop(true).animate({
+				'width' : '31%',
+				'left' : small.left
+			}, 700);
+			$imgs.children('.' + big.expr).children('img').css({
+				'z-index' : '3',
+				'opacity' : '1'
+			}).stop(true).animate({
+				'width' : '41%',
+				'left' : '50%'
+			}, 700);
+			$imgs.children().eq(visible.index).children('img').css({
+				'z-index' : '1',
+				'left' : visible.left_before,
+				'visibility' : 'visible',
+				'width' : '21%'
+			}).stop(true).animate({
+				'width' : '31%',
+				'left' : visible.left_after,
+				'opacity' : '0.5'
+			}, 700, function() {
+				$imgs.children().removeAttr('class').children('img').removeAttr('style');
+				$imgs.children().eq(big.index).attr('class', 'now');
+				$imgs.children().eq(small.index).attr('class', small.expr_after);
+				$imgs.children().eq(visible.index).attr('class', visible.expr_after);
+				imageDiv.init();
+			});
+		}
 	}
-	// 使图片适应尺寸
-	var changeImage = function(image) {
-		var height = $(image).height();
-		var width = $(image).width();
-		var ratio = 90 / height;
-		$(image).height(90);
-		$(image).width(width * ratio);
+	function userDiv() {
+		var $userDiv = $(".material_right .userDiv");
+		var user = JSON.parse(sessionStorage.getItem("user"));
+
+		if (user && user.name) {
+			$userDiv.find(".logout").css("display", "none");
+			var $login = $userDiv.find(".login").removeAttr("style");
+			$login.find("img").attr({
+				"src" : user.icon
+			}) //
+			.parent().attr({
+				"data-href" : "home?userId=" + user.id
+			});
+			$login.find(".name").attr({
+				"data-href" : "home?userId=" + user.id
+			}).text(user.name);
+			// $login.find(".level").text(user.level);
+			// var $nums = $login.find(".userDiv_bottom .num")
+			// $nums.eq(0).text(user.dynamicNum);
+			// $nums.eq(1).text(user.attentionNum);
+			// $nums.eq(2).text(user.fansNum);
+		}
 	}
-}
+	imageDiv.init();
+	userDiv();
+})()

@@ -1,384 +1,101 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<link rel="stylesheet" type="text/css" href="css/reset.css">
-<link rel="stylesheet" type="text/css" href="css/index.css">
-<link rel="stylesheet" type="text/css" href="css/common.css">
-<title>我的贴吧主页</title>
-<meta http-equiv="pragma" content="no-cache">
-<meta http-equiv="cache-control" content="no-cache">
-<meta http-equiv="expires" content="0">
-<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
-<meta http-equiv="description" content="This is my page">
-<!--
-		<link rel="stylesheet" type="text/css" href="styles.css">
-		-->
-</head>
-<script type="text/javascript" src="js/jquery-1.12.1.js"></script>
-<script type="text/javascript" src="js/index.js"></script>
-<script type="text/javascript" src="js/common.js"></script>
-<script type="text/javascript">
-	$(document).ready(function() {
-		// 初始化开始
-		var method = window.location.search;
-		method = method.substring(1);
-		if (method == "") {
-			method = "post_findByPage";
-		}
-		var name = method.substring(method.indexOf("_") + 1);
-		if (name == "findByPage") {
-			name = "posts";
-		}
-		loadMaterial(name, method, 1, true);
-		// 初始化结束
-		// 索引开始
-		$("#index").click(function() {
-			$(this).parent().siblings().slideToggle(500);
-			if ($("#index i").hasClass('arrows_button')) {
-				$(this).html("收起索引<i class='arrows_top'></i>");
-			} else {
-				$(this).html("展开索引<i class='arrows_button'></i>");
-			}
-		})
-		// 索引结束
-
-		// 导航栏开始
-		$("#posts").click(function() {
-			loadMaterial("posts", "post_findByPage", 1);
-		})
-		$("#picture").click(function() {
-			alert("暂未加入该功能");
-		})
-		$("#boutique").click(function() {
-			loadMaterial("boutique", "post_boutique", 1);
-		})
-		$("#group").click(function() {
-			alert("暂未加入该功能");
-		})
-		// 导航栏结束
-
-		$(".backgroundimg").attr("src",getUrl()+"/image/background.jpg");
-		$(".bar_logo").attr("src",getUrl()+"/image/logo.png");
-	})
-	function createPost() {
-		var content = $("#ueditor_textarea_editorValue").val();
-		var title = $("#title").val();
-		if (user && user.login) {
-			if (title == "") {
-				$("#title").focus();
-				return;
-			} else if (content == undefined || content == "") {
-				ue.focus();
-				return;
-			} else {
-				$("#post").attr("action",getUrl()+"/post_createPost").submit();
-			}
-		} else {
-			formDiv.show("loginDiv");
-		}
-	}
-</script>
-<body>
-	<div class="right">
-		<ul>
-			<li title="发帖" class="right_div right_post" onclick="toPost();"></li>
-			<li title="刷新" class="right_div right_reflash" onclick="reflash();"></li>
-			<li title="分享" class="right_div right_share"></li>
-			<li title="返回顶部" class="right_div right_top" onclick="toTop();"></li>
-		</ul>
-	</div>
-	<span id="_top"></span>
-	<div class="hidden"></div>
-	<div class="loginDiv formDiv">
-		<form action="" id="login_form">
-			<span class="top">登录账号<i></i>
-			</span> <input id="login_username" class="username  input" name="username" type="text" placeholder="账号"> <input id="login_password"
-				class="password  input" name="password" type="password" placeholder="密码">
-			<div class="middle">
-				<input class="fl check" type="checkbox"><span class="middle_left fl">下次自动登录</span> <a class="middle_right fr" href="#">登录遇到问题</a>
-			</div>
-			<div class="bottom">
-				<span id="login_submit" class="button">登录</span> <a class="fr" href="#">立即注册</a>
-			</div>
-			<span id="msg" class="msg"></span>
-		</form>
-	</div>
-	<div class="registDiv formDiv">
-		<form action="" id="regist_form">
-			<span class="top">注册账号<i></i>
-			</span> <input id="regist_username" class="username input" name="username" type="text" placeholder="账号"> <span id="usernameMsg" class="eMsg"></span>
-			<input id="regist_password" class="password input" name="password" type="password" placeholder="密码"> <span id="passwordMsg"
-				class="eMsg"></span> <input id="regist_repassword" class="username input" name="repassword" type="password" placeholder="确认密码"> <span
-				id="repasswordMsg" class="eMsg"></span> <input id="regist_name" class="name input" name="name" type="text" placeholder="昵称"> <span
-				id="nameMsg" class="eMsg"></span> <input id="regist_email" class="email input" name="email" type="text" placeholder="邮箱"> <span
-				id="emailMsg" class="eMsg"></span>
-			<div class="middle">
-				<input class="fl check" type="checkbox" checked="checked"><span class="middle_left fl">阅读并接受</span> <a class="middle_right fl"
-					href="#">《贴吧协议》</a>
-			</div>
-			<div class="bottom">
-				<span id="regist_submit" class="button">注册</span>
-			</div>
-			<span id="msg" class="msg"></span>
-		</form>
-	</div>
-	<div class="top">
-		<ul class="top_head fr">
-			<!-- 未登录 -->
-			<li class="login head_div fl unlogin"><a id="login" href="#">登录</a></li>
-			<li class="regist head_div fl unlogin"><a id="regist" href="#">注册</a></li>
-
-			<!-- 已登录 -->
-			<li class="login head_div fl logined"><a>欢迎<!-- 用户名 --></a></li>
-			<li class="regist head_div fl logined"><a id="exit" class="" href="#">退出</a></li>
-
-			<li class="buy fl">
-				<div class="head_div">
-					<a class="buy_a" href="#" title="购买商品"></a>
-				</div>
-			</li>
-			<li class="app fl">
-				<div class="head_div">
-					<a class="app_a" href="#" title="下载手机端"></a>
-				</div>
-			</li>
-			<li class="separator fl">|</li>
-			<li class="center fl">
-				<div class="head_div">
-					<a class="center_a" href="#">应用中心</a>
-				</div>
-			</li>
-			<li class="vip fl">
-				<div class="head_div">
-					<a class="vip_a" href="#">会员官网</a>
-				</div>
-			</li>
-			<li class="index fl">
-				<div class="head_div">
-					<a class="index_a" href="index">首页</a>
-				</div>
-			</li>
-		</ul>
-		<div class="search">
-			<div class="search_top"></div>
-			<div class="search_bottom">
-				<input class="search_text fl" type="text"> <input class="search_bar fl" type="button" value="进入贴吧"> <input
-					class="search_all fl" type="button" value="全吧搜索"> <a class="search_high fl" href="#">高级搜索</a>
-			</div>
-		</div>
-	</div>
-
-	<div class="head">
-		<img class="backgroundimg" src=""> <img class="bar_logo" src="">
-		<div class="head_top">
-			<div class="head_button fr">
-				<a class="check" title="签到" href="#"> <span class="check_top fl">02月24日</span> <span class="check_bottom fl">漏签<span class="day">0</span>天
-				</span>
-				</a>
-			</div>
-			<div class="desc fl">
-				<div class="desc_top">
-					<h1 class="fl">我的吧</h1>
-					<a class="attention fl" href="#" title="关注"></a>
-					<div class="num fl">
-						<span class="name">关注:</span> <span class="value">12312</span> <span class="name">&nbsp;帖子:</span> <span class="value">123123</span>
-					</div>
-				</div>
-				<div class="desc_bottom">
-					<p class="fl">这里，有我们的浪漫~</p>
-					<div class="num fl">
-						<span class="name">目录:</span> <span class="value">xxxx</span>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="head_bottom">
-			<div class="bottom_nav fl">
-				<span class="title">分类1</span>
-				<div class="links">
-					<ul>
-						<li><div class="link_div">
-								<a class="link_a" href="#"><span class="link_span">aaa</span>text1</a>
-							</div></li>
-						<li><div class="link_div">
-								<a class="link_a" href="#"><span class="link_span">aaa</span>text2</a>
-							</div></li>
-						<li><div class="link_div">
-								<a class="link_a" href="#"><span class="link_span">aaa</span>text3</a>
-							</div></li>
-						<li><div class="link_div">
-								<a class="link_a" href="#"><span class="link_span">aaa</span>text4</a>
-							</div></li>
-					</ul>
-				</div>
-			</div>
-			<div class="bottom_nav fl">
-				<span class="title">分类2</span>
-				<div class="links">
-					<ul>
-						<li><div class="link_div">
-								<a class="link_a" href="#">text1</a>
-							</div></li>
-						<li><div class="link_div">
-								<a class="link_a" href="#">text2</a>
-							</div></li>
-						<li><div class="link_div">
-								<a class="link_a" href="#">text3</a>
-							</div></li>
-						<li><div class="link_div">
-								<a class="link_a" href="#">text4</a>
-							</div></li>
-					</ul>
-				</div>
-			</div>
-			<div class="bottom_nav fl">
-				<span class="title">分类3</span>
-				<div class="links">
-					<ul>
-						<li><div class="link_div">
-								<a class="link_a" href="#">text1</a>
-							</div></li>
-						<li><div class="link_div">
-								<a class="link_a" href="#">text2</a>
-							</div></li>
-						<li><div class="link_div">
-								<a class="link_a" href="#">text3</a>
-							</div></li>
-						<li><div class="link_div">
-								<a class="link_a" href="#">text4</a>
-							</div></li>
-					</ul>
-				</div>
-			</div>
-			<div class="bottom_button">
-				<a id="index" class="button_a">收起指引<i class="arrows_top"></i>
-				</a>
-			</div>
-		</div>
-	</div>
-	<div class="main">
-		<div class="main_nav">
-			<ul>
-				<li id="posts" class="nav_element fl opt">看帖</li>
-				<li id="picture" class="nav_element fl">图片</li>
-				<li id="boutique" class="nav_element fl">精品</li>
-				<li id="group" class="nav_element fl">群组</li>
+		<div class="images">
+			<i id="image_before" class="before">&lt;</i>
+			<ul class="" style="overflow: hidden;">
+				<li class="now"><img src="image/index/2338042.jpg" alt=""></li>
+				<li class="next"><img src="image/index/2338043.jpg" alt=""></li>
+				<li><img src="image/index/1200836107_9_1.jpg" alt=""></li>
+				<li><img src="image/index/23380424.jpg" alt=""></li>
+				<li class="previous"><img src="image/index/2338044.jpg" alt=""></li>
+			</ul>
+			<i id="image_after" class="after">></i>
+			<ul class="points">
+				<li class="point_now"></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
 			</ul>
 		</div>
-		<div id="material" class="main_material">
-			<div class="material_posts fl">
-				<ul id="_posts">
-				</ul>
-				<div class="posts_bottom">
-					<div class="page">
-						<ul id="pages">
+		<div class="material">
+			<div class="material_left">
+				<div class="songs">
+					<div class="top">
+						<h2>
+							<i><i></i></i><a href="#">热门推荐</a>
+						</h2>
+						<ul id="songMenuSecondTagList">
+						</ul>
+						<a class="more" href="#songMenus?secondTagName=全部">更多<i class="icomoon"> </i></a>
+					</div>
+					<div class="bottom" style="min-height: 440px;">
+						<ul id="songMenuList">
 						</ul>
 					</div>
-					<div class="desc">
-						<p>
-							共有帖子<span class="postNum red"></span>篇，<span class="blue">会员</span><span class="userNum red"></span>名
-						</p>
+				</div>
+				<div class="albums">
+					<div class="top">
+						<h2>
+							<i><i></i></i><a href="#">新碟上架</a>
+						</h2>
+						<a class="more" href="#albums">更多<i class="icomoon"> </i></a>
+					</div>
+					<div class="bottom">
+						<ul id="albumDiv" class="albumDiv">
+							<i class="previous">&lt;</i>
+							<div class="album_hidden">
+								<ul id="albumList1">
+								</ul>
+								<ul id="albumList2" style="left: 100%">
+								</ul>
+							</div>
+							<i class="next">&gt;</i>
+						</ul>
+					</div>
+				</div>
+				<div class="lists">
+					<div class="top">
+						<h2>
+							<i><i></i></i><a href="#">榜单</a>
+						</h2>
+						<a class="more" href="">更多<i class="icomoon"> </i></a>
+					</div>
+					<div class="bottom">
+						<ul id="songLists">
+						</ul>
 					</div>
 				</div>
 			</div>
-			<div class="material_message fr">
-				<div class="message_div">
-					<div class="vip">会员相关</div>
-				</div>
-				<div class="message_div">
-					<div class="user" style="display: none;">
-						<!-- 登陆显示？ -->
-						<div class="message_sort">我在贴吧</div>
-						<img class="user_img fl" src="">
-						<div class="details fl">
-							<ul>
-								<li class="user_name"><a href="#" class="user_name_a"> </a></li>
-								<li class=""><a href="#" class="user_property"> </a></li>
-								<li class=""><a href="#" class="user_property"> </a></li>
-								<li class="user_money"><span class="user_money_span">12</span><a href="#" class="user_money_a">[获取]</a></li>
-								<li><a href="#" class="user_property appealPost">帖子申诉</a></li>
-							</ul>
+			<div class="material_right">
+				<div class="userDiv" style="height: 160px">
+					<div class="logout">
+						<p>登录xxx，可以享受无限收藏的乐趣，并且无限同步到手机</p>
+						<a href="javascript:void(0);" id="userLogin" class="userLogin" onclick="MMR.get('login').show();">用户登录</a>
+					</div>
+					<div class="login" style="display: none">
+						<a href="javascript:void(0);" onclick="jump(this);" class="image">
+							<img src="">
+						</a>
+						<div class="image_left">
+							<a href="javascript:void(0);" onclick="jump(this);" class="name">阿斯克</a><br>
+							<a class="level" onclick="alert('暂无')">Lv.1</a><br>
+							<span class="button">签 到</span>
 						</div>
+						<ul class="userDiv_bottom">
+							<li class=""><a><span class="num">0</span><br> <span>动态</span></a></li>
+							<li class=""><a><span class="num">0</span><br> <span>关注</span></a></li>
+							<li class=""><a><span class="num">0</span><br> <span>粉丝</span></a></li>
+						</ul>
 					</div>
 				</div>
-				<div class="message_div">
-					<div class="bar">
-						<div class="message_sort">本吧信息</div>
-						<a href="#" class="bar_details">查看详情>></a>
-						<div class="bar_admins">
-							<ul>
-								<li class="bar_admin fl"><img class="admin_img" src="" /> <a class="admin_name" href="#">a</a></li>
-								<li class="bar_admin fl"><img class="admin_img" src="" /> <a class="admin_name" href="#">b</a></li>
-								<li class="bar_admin fl"><img class="admin_img" src="" /> <a class="admin_name" href="#">c</a></li>
-							</ul>
-						</div>
-						<div class="informations">
-							<div class="information">小吧：小吧主共3人</div>
-							<div class="information">
-								会员：<a class="information_a" href="#">呵呵</a>
-							</div>
-							<div class="information">
-								目录：<a class="information_a" href="#">哈哈</a>
-							</div>
-						</div>
-						<div class="methods">
-							<a class="method" href="#">申请小吧主</a> <a class="method" href="#">阅读本吧吧刊</a>
-						</div>
-					</div>
-				</div>
-				<div class="message_div">
-					<div>吧主选择</div>
-				</div>
-				<div class="message_div">
-					<div class="friends">友情贴吧</div>
-				</div>
-				<div class="message_div" style="display: none;">
-					<div class="message_sort">吧务管理</div>
-					<ul class="list">
-						<li class="list_button" onclick="alert('暂未加入该功能');">职业吧主后台</li>
-						<li class="list_button" onclick="toAdmin();">吧务后台</li>
-						<li class="list_button" onclick="alert('暂未加入该功能');">会员中心</li>
-						<li class="list_button" onclick="alert('暂未加入该功能');">管理模式</li>
-						<li class="list_button">设置吧名片</li>
-						<li class="list_button" onclick="alert('暂未加入该功能');">吧主制度</li>
-						<li class="list_button" onclick="">设置头图</li>
-						<li class="list_button" onclick="alert('暂未加入该功能');">会员专属置顶</li>
+				<div class="message">
+					<p>
+						<span>入驻歌手</span> <span class="all" data-url="singers" data-href="singers?classifyId=all" onclick="jump(this);">查看全部 ></span>
+					</p>
+					<ul id="userList" class="singers">
 					</ul>
+					<div class="applySinger">
+						<span class="button" onclick="alert('暂不支持');">申请成为音乐人</span>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-	<div class="foot">
-		<div class="foot_top">
-			<div class="top_head">
-				<div class="chooses"></div>
-			</div>
-			<form id="post" name="post" method="post">
-				<div class="top_title">
-					<input type="text" id="title" name="title" placeholder="请填写标题" class="title" onkeydown="if(event.keyCode==13)return false;" />
-				</div>
-				<div class="top_content">
-					<script id="editor" type="text/plain" style="min-height: 282px;"></script>
-					<script type="text/javascript" charset="utf-8" src="editor/ueditor.config.js"></script>
-					<script type="text/javascript" charset="utf-8" src="editor/ueditor.all.min.js">
-						
-					</script>
-					<script type="text/javascript" charset="utf-8" src="editor/lang/zh-cn/zh-cn.js"></script>
-					<script type="text/javascript" style="z-index: 1;">
-						var ue = UE.getEditor('editor');
-					</script>
-				</div>
-			</form>
-			<div class="top_buttom">
-				<span class="buttom_a" onclick="createPost();">发 表</span>
-			</div>
-		</div>
-		<div class="foot_bottom">
-			<p class="bottom_p">
-				©2016 贴吧协议 | <a href="#" class="bottom_a">吧主制度</a> | 意见反馈 | 网络谣言警示
-			</p>
-		</div>
-	</div>
-</body>
-</html>

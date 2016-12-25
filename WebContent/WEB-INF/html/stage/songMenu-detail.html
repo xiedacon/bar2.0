@@ -1,0 +1,107 @@
+<style type="text/css">
+.creator_time .creator img {
+	display: inline-block;
+	width: 35px;
+	vertical-align: bottom;
+	cursor: pointer;
+}
+
+.creator_time .creator .creatorName {
+	line-height: 35px;
+	color: #0c73c2;
+	cursor: pointer;
+}
+
+.creator_time .creator .creatorName:hover {
+	text-decoration: underline;
+}
+
+</style>
+		<div class="material">
+			<div class="material_left">
+				<div id="songMenu" class="songMenuMessage entityMessage">
+
+				</div>
+				<div class="songList">
+					<div class="songList_top">
+						<h2>歌曲列表</h2>
+						<span id="songNum" class="songList_detail"></span>
+						<p class="top_right">
+							<span>
+								播放：<i id="playNum" class="num"></i>次
+							</span>
+						</p>
+					</div>
+					<table>
+						<thead>
+							<tr>
+								<td class="first_td"></td>
+								<td class="songName_td">歌曲标题</td>
+								<td class="time_td">时长</td>
+								<td class="songer_td">歌手</td>
+								<td class="special_td">专辑</td>
+							</tr>
+						</thead>
+						<tbody id="songList"></tbody>
+					</table>
+				</div>
+				<div class="commentList">
+					<div class="commentList_top">
+						<h2>评论列表</h2>
+						<span id="commentNum" class="commentList_detail">
+						</span>
+					</div>
+					<div class="commentList_middle">
+						<div class="newComment">
+							<img id="userIcon" class="newComment_left" src="image/default.jpg">
+							<div class="newComment_right">
+								<s></s>
+								<textarea id="newComment" class="content"></textarea>
+								<div class="right_bottom">
+									<div class="left">
+										<i class="icomoon face" onclick="FUNCTION.showEmojis();"></i>
+										<i class="icomoon at"></i>
+										<div id="emojis" class="emojis" style="display: none;">
+											<i class="triangle"></i>
+										</div>
+									</div>
+									<div class="right">
+										<span class="num">200</span>
+										<span id="addComment" class="button">评论</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<ul id="commentList" class="comments"></ul>
+					</div>
+					<div class="commentList_bottom">
+						<ul id="pages">
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="material_right">
+				<ul class="likeIt">
+					<h3>喜欢这个歌单的人</h3>
+					<li class="user" title="a卡号"><img src="image/song/3416182631786344.jpg"></li>
+					<li class="user"><img src="image/song/3416182631786344.jpg"></li>
+					<li class="user"><img src="image/song/3416182631786344.jpg"></li>
+					<li class="user" style="margin: 0 0 10px 0;"><img src="image/song/3416182631786344.jpg"></li>
+					<li class="user"><img src="image/song/3416182631786344.jpg"></li>
+					<li class="user"><img src="image/song/3416182631786344.jpg"></li>
+					<li class="user"><img src="image/song/3416182631786344.jpg"></li>
+					<li class="user" style="margin: 0 0 10px 0;"><img src="image/song/3416182631786344.jpg"></li>
+				</ul>
+				<ul class="select">
+					<h3>热门歌单</h3>
+					<li class="option"><img title="哈克" src="image/song/3416182631786344.jpg">
+						<div class="option_right">
+							<span title="哈克斯阿三" class="name">哈克斯阿三</span> <span class="by">by</span> <a title="阿三" class="userName" href="#">阿三</a>
+						</div></li>
+					<li class="option"><img title="哈克" src="image/song/3416182631786344.jpg">
+						<div class="option_right">
+							<span title="哈克斯阿三" class="name">哈克斯阿三</span> <span class="by">by</span> <a title="阿三" class="userName" href="#">阿三</a>
+						</div></li>
+				</ul>
+			</div>
+		</div>

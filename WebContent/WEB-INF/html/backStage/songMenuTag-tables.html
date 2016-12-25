@@ -1,0 +1,403 @@
+
+<div class="row">
+	<div class="col-lg-12">
+		<h1 class="page-header">全部歌单分类</h1>
+	</div>
+	<!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<!-- /.panel-heading -->
+			<div class="panel-body">
+				<div class="">
+					<label>一级分类</label>
+					<button class="btn btn-default pull-right" data-toggle="modal" data-target="#first-add" style="margin-bottom: 10px;">添加</button>
+				</div>
+				<div class="">
+					<table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+						<thead>
+							<tr>
+								<th>歌单分类id</th>
+								<th>歌单分类名</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody id="firstTagTbody">
+							<tr class="prototype">
+								<td class="firstTagId"></td>
+								<td class="firstTagName"></td>
+								<td class="center" style="text-align: center;">
+									<button class="btn btn-info" data-type="edit" data-toggle="modal" data-target="#first-edit">
+										<span class="glyphicon glyphicon-edit" data-type="edit"></span>
+									</button>
+									<button class="btn btn-danger" data-type="delete">
+										<span class="glyphicon glyphicon-trash" data-type="delete"></span>
+									</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="modal fade" id="first-add" tabindex="-1" role="dialog" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button class="close" type="button" data-dismiss="modal">&times;</button>
+									<h4 class="modal-title">添加一级分类</h4>
+								</div>
+								<div class="modal-body">
+									<form id="firstAddForm">
+										<div class="form-group">
+											<label>分类名</label> 
+											<input name="name" type="text" class="form-control" />
+											<p class="help-block">必填，不能包含特殊字符</p>
+										</div>
+									</form>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+									<button id="addFirstTag" type="button" class="btn btn-primary">提交</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="first-edit" tabindex="-1" role="dialog" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button class="close" type="button" data-dismiss="modal">&times;</button>
+									<h4 class="modal-title">修改一级分类</h4>
+								</div>
+								<div class="modal-body">
+									<form id="firstEditForm">
+										<div class="form-group">
+											<label>分类名</label>
+											<input name="id" type="hidden"> 
+											<input name="name" type="text" class="form-control" />
+											<p class="help-block">必填，不能包含特殊字符</p>
+										</div>
+									</form>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+									<button type="button" id="editFirstTag" class="btn btn-primary">修改</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="">
+					<label>二级分类</label>
+					<button class="btn btn-default pull-right" data-toggle="modal" data-target="#second-add" style="margin-bottom: 10px;">添加</button>
+				</div>
+				<div class="">
+					<table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+						<thead>
+							<tr>
+								<th>歌单分类id</th>
+								<th>歌单分类名</th>
+								<th>一级分类id</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody id="secondTagTbody">
+							<tr class="prototype">
+								<td class="secondTagId"></td>
+								<td class="secondTagName"></td>
+								<td class="firstTagId"></td>
+								<td class="center" style="text-align: center;">
+									<button class="btn btn-info" data-type="edit" data-toggle="modal" data-target="#second-edit">
+										<span class="glyphicon glyphicon-edit" data-type="edit"></span>
+									</button>
+									<button class="btn btn-danger" data-type="delete">
+										<span class="glyphicon glyphicon-trash" data-type="delete"></span>
+									</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="modal fade" id="second-add" tabindex="-1" role="dialog" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button class="close" type="button" data-dismiss="modal">&times;</button>
+									<h4 class="modal-title">添加二级分类</h4>
+								</div>
+								<div class="modal-body">
+									<form id="secondAddForm">
+										<div class="form-group">
+											<label>分类名</label> 
+											<input name="name" type="text" class="form-control" />
+											<p class="help-block">必填，不能包含特殊字符</p>
+										</div>
+										<div class="form-group">
+											<label>所属一级分类</label> 
+											<select name="firstTagId" class="form-control selectFirstTag">
+											</select>
+											<p class="help-block">必填</p>
+										</div>
+									</form>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+									<button type="button" class="btn btn-primary" id="addSecondTag">提交</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="second-edit" tabindex="-1" role="dialog" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button class="close" type="button" data-dismiss="modal">&times;</button>
+									<h4 class="modal-title">修改二级分类</h4>
+								</div>
+								<div class="modal-body">
+									<form id="secondEditForm">
+										<div class="form-group">
+											<label>分类名</label>
+											<input name="id" type="hidden"> 
+											<input name="name" type="text" class="form-control" />
+											<p class="help-block">必填，不能包含特殊字符</p>
+										</div>
+										<div class="form-group">
+											<label>所属一级分类</label> 
+											<select name="firstTagId" class="form-control selectFirstTag">
+											</select>
+											<p class="help-block">必填</p>
+										</div>
+									</form>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+									<button type="button" class="btn btn-primary" id="editSecondTag">修改</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /.panel-body -->
+		</div>
+		<!-- /.panel -->
+	</div>
+	<!-- /.col-lg-12 -->
+</div>
+<script type="text/javascript">
+
+	(function(){
+		var $firstTbody = $("#firstTagTbody") //
+		, $secondTbody = $("#secondTagTbody") //
+		, $firstPrototype = $firstTbody.find(".prototype").clone().removeClass("prototype") //
+		, $secondPrototype = $secondTbody.find(".prototype").clone().removeClass("prototype") //
+		, $firstAddForm = $("#firstAddForm") //
+		, $addFirstTag = $("#addFirstTag") //
+		, $firstEditForm = $("#firstEditForm") //
+		, $editFirstTag = $("#editFirstTag") //
+		, $secondAddForm = $("#secondAddForm") //
+		, $addSecondTag = $("#addSecondTag") //
+		, $secondEditForm = $("#secondEditForm") //
+		, $editSecondTag = $("#editSecondTag") //
+		, $selects = $(".selectFirstTag")
+		;
+		
+		$.ajax({
+			url:"/music/admin/firstSongMenuTag",
+			type:"GET",
+			dataType:"json"
+		}).done(function(data){
+			if(data.code != 200){
+				alert("加载失败");
+				return;
+			}
+			
+			var firstTags = data.data //
+			, $firstTag //
+			;
+			
+			firstTags.forEach(function(firstTag,index){
+				$firstTag = $firstPrototype.clone();
+				
+				$firstTag.attr("data-url","/music/admin/firstSongMenuTag/"+firstTag.id) //
+				.addClass(index % 2 == 0 ? "odd" : "even");
+
+				$firstTag.find(".firstTagId").text(firstTag.id);
+				$firstTag.find(".firstTagName").text(firstTag.name);
+				
+				$firstTbody.append($firstTag);
+				
+				$selects.append("<option value='"+firstTag.id+"'>"+firstTag.name+"</option>")
+			});
+			
+			$firstTbody.on("click",function(e){
+				var type = $(e.target).attr("data-type") //
+				, $firstTag = $(e.target).parents("tr");
+				switch(type){
+					case "delete" :
+						deleteItem($firstTag);
+						break;
+					case "edit" :
+						var id = $firstTag.find(".firstTagId").text() //
+						, name = $firstTag.find(".firstTagName").text();
+						$firstEditForm.find("input[name='id']").val(id);
+						$firstEditForm.find("input[name='name']").val(name);
+						break;
+					default : 
+						return;
+				}
+			});
+		});
+		
+		$.ajax({
+			url:"/music/admin/secondSongMenuTag",
+			type:"GET",
+			dataType:"json"
+		}).done(function(data){
+			if(data.code != 200){
+				alert("加载失败");
+				return;
+			}
+			
+			var secondTags = data.data //
+			, $secondTag //
+			;
+			
+			secondTags.forEach(function(secondTag,index){
+				$secondTag = $secondPrototype.clone();
+				
+				$secondTag.attr("data-url","/music/admin/secondSongMenuTag/"+secondTag.id) //
+				.addClass(index % 2 == 0 ? "odd" : "even");
+
+				$secondTag.find(".secondTagId").text(secondTag.id);
+				$secondTag.find(".secondTagName").text(secondTag.name);
+				$secondTag.find(".firstTagId").text(secondTag.firstTagId);
+				
+				$secondTbody.append($secondTag);
+			});
+			
+			$secondTbody.on("click",function(e){
+				var type = $(e.target).attr("data-type") //
+				, $secondTag = $(e.target).parents("tr");
+				switch(type){
+					case "delete" :
+						deleteItem($secondTag);
+						break;
+					case "edit" :
+						var id = $secondTag.find(".secondTagId").text() //
+						, name = $secondTag.find(".secondTagName").text() //
+						, firstTagId = $secondTag.find(".firstTagId").text();
+						$secondEditForm.find("input[name='id']").val(id);
+						$secondEditForm.find("input[name='name']").val(name);
+						$secondEditForm.find("select[name='firstTagId']").val(secondTag);
+						break;
+					default : 
+						return;
+				}
+			});
+		});
+
+		$addFirstTag.on("click",function(){
+			var name = $firstAddForm.find("input[name='name']").val();
+			
+			if(!name || name.trim() == ""){
+				return alert("分类名不能为空");
+			}
+			
+			$.ajax({
+				url:"/music/admin/firstSongMenuTag",
+				type:"POST",
+				dataType:"JSON",
+				data:{name:name}
+			}).done(function(data){
+				if(data.code == 200){
+					alert("操作成功");
+					refresh("/music/admin/html/songMenuTag-tables");
+				}else{
+					alert("操作失败");
+				}
+			});
+		});
+		$editFirstTag.on("click",function(){
+			var id = $firstEditForm.find("input[name='id']").val() //
+			, name = $firstEditForm.find("input[name='name']").val();
+			
+			if(!id){
+				return alert("未知错误");
+			}
+			if(!name || name.trim() == ""){
+				return alert("分类名不能为空");
+			}
+			
+			$.ajax({
+				url:"/music/admin/firstSongMenuTag/"+id,
+				type:"PUT",
+				dataType:"JSON",
+				data:{name:name}
+			}).done(function(data){
+				if(data.code == 200){
+					alert("操作成功");
+					refresh("/music/admin/html/songMenuTag-tables");
+				}else{
+					alert("操作失败");
+				}
+			});
+		});
+		
+		$addSecondTag.on("click",function(){
+			var name = $secondAddForm.find("input[name='name']").val() //
+			, firstTagId = $secondAddForm.find("select[name='firstTagId']").val();
+			
+			if(!name || name.trim() == ""){
+				return alert("分类名不能为空");
+			}
+			if(!firstTagId || firstTagId.trim() == ""){
+				return alert("一级分类不能为空");
+			}
+			
+			$.ajax({
+				url:"/music/admin/secondSongMenuTag",
+				type:"POST",
+				dataType:"JSON",
+				data:{name:name,firstTagId:firstTagId}
+			}).done(function(data){
+				if(data.code == 200){
+					alert("操作成功");
+					refresh("/music/admin/html/songMenuTag-tables");
+				}else{
+					alert("操作失败");
+				}
+			});
+		});
+		$editSecondTag.on("click",function(){
+			var id = $secondEditForm.find("input[name='id']").val() //
+			, name = $secondEditForm.find("input[name='name']").val() //
+			, firstTagId = $secondEditForm.find("select[name='firstTagId']").val();
+			
+			if(!id){
+				return alert("未知错误");
+			}
+			if(!name || name.trim() == ""){
+				return alert("分类名不能为空");
+			}
+			if(!firstTagId || firstTagId.trim() == ""){
+				return alert("一级分类不能为空");
+			}
+			
+			$.ajax({
+				url:"/music/admin/secondSongMenuTag/"+id,
+				type:"PUT",
+				dataType:"JSON",
+				data:{name:name,firstTagId:firstTagId}
+			}).done(function(data){
+				if(data.code == 200){
+					alert("操作成功");
+					refresh("/music/admin/html/songMenuTag-tables");
+				}else{
+					alert("操作失败");
+				}
+			});
+		});
+	}())
+
+</script>

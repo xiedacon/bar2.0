@@ -1,608 +1,882 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<link rel="stylesheet" type="text/css" href="../css/reset.css">
-<link rel="stylesheet" type="text/css" href="../css/common.css">
-<link rel="stylesheet" type="text/css" href="../css/admin.css">
-<link id="css" rel="stylesheet" type="text/css" href="../css/postDelete.css">
-<title>吧务中心</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<title>网站后台</title>
+<!-- Bootstrap Core CSS -->
+<link href="/music/css/bootstrap.min.css" rel="stylesheet">
+<!-- Custom CSS -->
+<link href="/music/css/sb-admin-2.min.css" rel="stylesheet">
+<link href="/music/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
 <style type="text/css">
-html {
-	background: #fff;
-}
-
-.top {
-	height: 50px;
-	border-bottom: 30px #7A8DA0 solid;
-}
-
-.top h1 {
-	padding-left: 1%;
-}
-
-.top h1 a {
-	line-height: 50px;
-	font-size: 20px;
-	color: #C2C2C2;
-}
-
-.material-left {
-	width: 15%;
-	background: #282D45;
-	overflow: hidden;
-}
-
-.material:after {
-	display: block;
-	visibility: hidden;
-	content: "";
-	height: 0;
-	clear: both;
-}
-
-.material-right {
-	width: 85%;
-}
-
-.material-left .user {
-	background: #414A73;
-	height: 30.15%
-}
-
-.material-left .index-user-icon {
-	margin: 5.56% 25.6% 0 25.6%;
-	width: 48.8%;
-	height: 55.56%;
-	border-radius: 50px;
-	overflow: hidden;
-}
-
-.material-left .index-user-name {
-	margin: 1% 0 0 0;
-	display: block;
-	font-size: 1.25em;
-	text-align: center;
-	color: #fff;
-}
-
-.material-left .user-location {
-	margin: 1% 0 7% 0;
-	display: block;
-	font-size: 1em;
-	text-align: center;
-	color: #fff;
-}
-
-.material-left .nav {
-	height: 50%;
-}
-
-.material-left .nav-button {
-	display: block;
-	width: 100%;
-	height: 16.67%;
-	line-height: 50px;
-	color: #fff;
-	font-size: 1.2em;
-}
-
-.material-left .nav-button span {
-	margin: -2% 0 0 0;
-	display: inline-block;
-	height: 50px;
-	width: 5%;
-	vertical-align: middle;
-}
-
-.material-left .nav-li:hover span {
-	background: #D1402F;
-}
-
-.material-left .nav-button i {
-	font-family: "icomoon";
-	color: #8686B7;
-}
-
-.material-left .nav-button-a {
-	display: inline-block;
-	color: #fff;
-	line-height: 30px;
-	font-size: 0.8em;
-	width: 100%;
-}
-
-.material-left .nav-button-a i {
-	display: inline-block;
-	background: #fff;
-	width: 3px;
-	height: 3px;
-	vertical-align: middle;
-	margin: -5px 10px 0 27px;
-}
-
-.material-left .nav ul {
+.prototype {
 	display: none;
-}
-
-.material-left .now {
-	border: 5px #282D45 solid;
-	border-right-color: #fff;
-	background: #fff;
-	margin: 10px 0;
-}
-
-.main {
-	width: 100%;
-	height: 100%;
-	background: #fff;
-	text-align: center;
-	font-size: 30px;
-	padding-top: 10%;
-	box-sizing: border-box;
 }
 </style>
 </head>
-<script type="text/javascript" src="../js/admin.js"></script>
-<script type="text/javascript" src="../js/jquery-1.12.1.js"></script>
-<script type="text/javascript">
-	$(document).ready(function() {
-		var height = document.body.clientHeight;
-		$(".material-left").css({
-			'min-height' : height - 80,
+<body>
+	<div id="wrapper">
+		<!-- Navigation -->
+		<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+			<div class="navbar-header" style="width: 100%;">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="/music/admin/html/index">网站后台</a>
+				<ul class="nav navbar-top-links navbar-right pull-right">
+					<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"> <i class="fa fa-user fa-fw"></i> <i
+							class="fa fa-caret-down"></i>
+					</a>
+						<ul class="dropdown-menu dropdown-user">
+							<li><a href="#" id="logout"><i class="fa fa-sign-out fa-fw"></i>退出</a></li>
+						</ul></li>
+				</ul>
+			</div>
+			<div class="navbar-default sidebar" role="navigation">
+				<div class="sidebar-nav navbar-collapse">
+					<ul class="nav" id="nav">
+						<li><a href="#" data-href="/music/admin/html/user-tables"><i class="fa fa-fw"></i> 用户模块</a></li>
+						<li><a href="#" data-href="/music/admin/html/songMenu-tables"><i class="fa fa-fw"></i> 歌单模块</a></li>
+						<li><a href="#" data-href="/music/admin/html/singer-tables"><i class="fa fa-fw"></i> 歌手模块</a></li>
+						<li><a href="#" data-href="/music/admin/html/song-tables"><i class="fa fa-fw"></i> 歌曲模块</a></li>
+						<li><a href="#" data-href="/music/admin/html/songList-tables"><i class="fa fa-fw"></i> 榜单模块</a></li>
+						<li><a href="#" data-href="/music/admin/html/album-tables"><i class="fa fa-fw"></i> 专辑模块</a></li>
+						<li><a href="#" data-href="/music/admin/html/singerClassify-tables"><i class="fa fa-fw"></i> 歌手分类模块</a></li>
+						<li><a href="#" data-href="/music/admin/html/albumTag-tables"><i class="fa fa-fw"></i> 专辑分类模块</a></li>
+						<li><a href="#" data-href="/music/admin/html/songMenuTag-tables"><i class="fa fa-fw"></i> 歌单分类模块</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<div id="page-wrapper">
+			<div class="row">
+				<div class="col-lg-12">
+					<h1 class="page-header">Dashboard</h1>
+				</div>
+				<!-- /.col-lg-12 -->
+			</div>
+			<!-- /.row -->
+			<div class="row">
+				<div class="col-lg-3 col-md-6">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<div class="row">
+								<div class="col-xs-3">
+									<i class="fa fa-comments fa-5x"></i>
+								</div>
+								<div class="col-xs-9 text-right">
+									<div class="huge">26</div>
+									<div>New Comments!</div>
+								</div>
+							</div>
+						</div>
+						<a href="#">
+							<div class="panel-footer">
+								<span class="pull-left">View Details</span> <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+								<div class="clearfix"></div>
+							</div>
+						</a>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<div class="panel panel-green">
+						<div class="panel-heading">
+							<div class="row">
+								<div class="col-xs-3">
+									<i class="fa fa-tasks fa-5x"></i>
+								</div>
+								<div class="col-xs-9 text-right">
+									<div class="huge">12</div>
+									<div>New Tasks!</div>
+								</div>
+							</div>
+						</div>
+						<a href="#">
+							<div class="panel-footer">
+								<span class="pull-left">View Details</span> <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+								<div class="clearfix"></div>
+							</div>
+						</a>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<div class="panel panel-yellow">
+						<div class="panel-heading">
+							<div class="row">
+								<div class="col-xs-3">
+									<i class="fa fa-shopping-cart fa-5x"></i>
+								</div>
+								<div class="col-xs-9 text-right">
+									<div class="huge">124</div>
+									<div>New Orders!</div>
+								</div>
+							</div>
+						</div>
+						<a href="#">
+							<div class="panel-footer">
+								<span class="pull-left">View Details</span> <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+								<div class="clearfix"></div>
+							</div>
+						</a>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<div class="panel panel-red">
+						<div class="panel-heading">
+							<div class="row">
+								<div class="col-xs-3">
+									<i class="fa fa-support fa-5x"></i>
+								</div>
+								<div class="col-xs-9 text-right">
+									<div class="huge">13</div>
+									<div>Support Tickets!</div>
+								</div>
+							</div>
+						</div>
+						<a href="#">
+							<div class="panel-footer">
+								<span class="pull-left">View Details</span> <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+								<div class="clearfix"></div>
+							</div>
+						</a>
+					</div>
+				</div>
+			</div>
+			<!-- /.row -->
+			<div class="row">
+				<div class="col-lg-8">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<i class="fa fa-bar-chart-o fa-fw"></i> Area Chart Example
+							<div class="pull-right">
+								<div class="btn-group">
+									<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+										Actions <span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu pull-right" role="menu">
+										<li><a href="#">Action</a></li>
+										<li><a href="#">Another action</a></li>
+										<li><a href="#">Something else here</a></li>
+										<li class="divider"></li>
+										<li><a href="#">Separated link</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<!-- /.panel-heading -->
+						<div class="panel-body">
+							<div id="morris-area-chart"></div>
+						</div>
+						<!-- /.panel-body -->
+					</div>
+					<!-- /.panel -->
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<i class="fa fa-bar-chart-o fa-fw"></i> Bar Chart Example
+							<div class="pull-right">
+								<div class="btn-group">
+									<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+										Actions <span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu pull-right" role="menu">
+										<li><a href="#">Action</a></li>
+										<li><a href="#">Another action</a></li>
+										<li><a href="#">Something else here</a></li>
+										<li class="divider"></li>
+										<li><a href="#">Separated link</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<!-- /.panel-heading -->
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-lg-4">
+									<div class="table-responsive">
+										<table class="table table-bordered table-hover table-striped">
+											<thead>
+												<tr>
+													<th>#</th>
+													<th>Date</th>
+													<th>Time</th>
+													<th>Amount</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>3326</td>
+													<td>10/21/2013</td>
+													<td>3:29 PM</td>
+													<td>$321.33</td>
+												</tr>
+												<tr>
+													<td>3325</td>
+													<td>10/21/2013</td>
+													<td>3:20 PM</td>
+													<td>$234.34</td>
+												</tr>
+												<tr>
+													<td>3324</td>
+													<td>10/21/2013</td>
+													<td>3:03 PM</td>
+													<td>$724.17</td>
+												</tr>
+												<tr>
+													<td>3323</td>
+													<td>10/21/2013</td>
+													<td>3:00 PM</td>
+													<td>$23.71</td>
+												</tr>
+												<tr>
+													<td>3322</td>
+													<td>10/21/2013</td>
+													<td>2:49 PM</td>
+													<td>$8345.23</td>
+												</tr>
+												<tr>
+													<td>3321</td>
+													<td>10/21/2013</td>
+													<td>2:23 PM</td>
+													<td>$245.12</td>
+												</tr>
+												<tr>
+													<td>3320</td>
+													<td>10/21/2013</td>
+													<td>2:15 PM</td>
+													<td>$5663.54</td>
+												</tr>
+												<tr>
+													<td>3319</td>
+													<td>10/21/2013</td>
+													<td>2:13 PM</td>
+													<td>$943.45</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<!-- /.table-responsive -->
+								</div>
+								<!-- /.col-lg-4 (nested) -->
+								<div class="col-lg-8">
+									<div id="morris-bar-chart"></div>
+								</div>
+								<!-- /.col-lg-8 (nested) -->
+							</div>
+							<!-- /.row -->
+						</div>
+						<!-- /.panel-body -->
+					</div>
+					<!-- /.panel -->
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<i class="fa fa-clock-o fa-fw"></i> Responsive Timeline
+						</div>
+						<!-- /.panel-heading -->
+						<div class="panel-body">
+							<ul class="timeline">
+								<li>
+									<div class="timeline-badge">
+										<i class="fa fa-check"></i>
+									</div>
+									<div class="timeline-panel">
+										<div class="timeline-heading">
+											<h4 class="timeline-title">Lorem ipsum dolor</h4>
+											<p>
+												<small class="text-muted"><i class="fa fa-clock-o"></i> 11 hours ago via Twitter</small>
+											</p>
+										</div>
+										<div class="timeline-body">
+											<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero laboriosam dolor perspiciatis omnis exercitationem. Beatae,
+												officia pariatur? Est cum veniam excepturi. Maiores praesentium, porro voluptas suscipit facere rem dicta, debitis.</p>
+										</div>
+									</div>
+								</li>
+								<li class="timeline-inverted">
+									<div class="timeline-badge warning">
+										<i class="fa fa-credit-card"></i>
+									</div>
+									<div class="timeline-panel">
+										<div class="timeline-heading">
+											<h4 class="timeline-title">Lorem ipsum dolor</h4>
+										</div>
+										<div class="timeline-body">
+											<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Autem dolorem quibusdam, tenetur commodi provident cumque magni
+												voluptatem libero, quis rerum. Fugiat esse debitis optio, tempore. Animi officiis alias, officia repellendus.</p>
+											<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium maiores odit qui est tempora eos, nostrum provident
+												explicabo dignissimos debitis vel! Adipisci eius voluptates, ad aut recusandae minus eaque facere.</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<div class="timeline-badge danger">
+										<i class="fa fa-bomb"></i>
+									</div>
+									<div class="timeline-panel">
+										<div class="timeline-heading">
+											<h4 class="timeline-title">Lorem ipsum dolor</h4>
+										</div>
+										<div class="timeline-body">
+											<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus numquam facilis enim eaque, tenetur nam id qui vel velit
+												similique nihil iure molestias aliquam, voluptatem totam quaerat, magni commodi quisquam.</p>
+										</div>
+									</div>
+								</li>
+								<li class="timeline-inverted">
+									<div class="timeline-panel">
+										<div class="timeline-heading">
+											<h4 class="timeline-title">Lorem ipsum dolor</h4>
+										</div>
+										<div class="timeline-body">
+											<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates est quaerat asperiores sapiente, eligendi, nihil. Itaque
+												quos, alias sapiente rerum quas odit! Aperiam officiis quidem delectus libero, omnis ut debitis!</p>
+										</div>
+									</div>
+								</li>
+								<li>
+									<div class="timeline-badge info">
+										<i class="fa fa-save"></i>
+									</div>
+									<div class="timeline-panel">
+										<div class="timeline-heading">
+											<h4 class="timeline-title">Lorem ipsum dolor</h4>
+										</div>
+										<div class="timeline-body">
+											<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nobis minus modi quam ipsum alias at est molestiae excepturi delectus
+												nesciunt, quibusdam debitis amet, beatae consequuntur impedit nulla qui! Laborum, atque.</p>
+											<hr>
+											<div class="btn-group">
+												<button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+													<i class="fa fa-gear"></i> <span class="caret"></span>
+												</button>
+												<ul class="dropdown-menu" role="menu">
+													<li><a href="#">Action</a></li>
+													<li><a href="#">Another action</a></li>
+													<li><a href="#">Something else here</a></li>
+													<li class="divider"></li>
+													<li><a href="#">Separated link</a></li>
+												</ul>
+											</div>
+										</div>
+									</div>
+								</li>
+								<li>
+									<div class="timeline-panel">
+										<div class="timeline-heading">
+											<h4 class="timeline-title">Lorem ipsum dolor</h4>
+										</div>
+										<div class="timeline-body">
+											<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sequi fuga odio quibusdam. Iure expedita, incidunt unde quis nam!
+												Quod, quisquam. Officia quam qui adipisci quas consequuntur nostrum sequi. Consequuntur, commodi.</p>
+										</div>
+									</div>
+								</li>
+								<li class="timeline-inverted">
+									<div class="timeline-badge success">
+										<i class="fa fa-graduation-cap"></i>
+									</div>
+									<div class="timeline-panel">
+										<div class="timeline-heading">
+											<h4 class="timeline-title">Lorem ipsum dolor</h4>
+										</div>
+										<div class="timeline-body">
+											<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt obcaecati, quaerat tempore officia voluptas debitis
+												consectetur culpa amet, accusamus dolorum fugiat, animi dicta aperiam, enim incidunt quisquam maxime neque eaque.</p>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<!-- /.panel-body -->
+					</div>
+					<!-- /.panel -->
+				</div>
+				<!-- /.col-lg-8 -->
+				<div class="col-lg-4">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<i class="fa fa-bell fa-fw"></i> Notifications Panel
+						</div>
+						<!-- /.panel-heading -->
+						<div class="panel-body">
+							<div class="list-group">
+								<a href="#" class="list-group-item"> <i class="fa fa-comment fa-fw"></i> New Comment <span class="pull-right text-muted small"><em>4
+											minutes ago</em> </span>
+								</a> <a href="#" class="list-group-item"> <i class="fa fa-twitter fa-fw"></i> 3 New Followers <span class="pull-right text-muted small"><em>12
+											minutes ago</em> </span>
+								</a> <a href="#" class="list-group-item"> <i class="fa fa-envelope fa-fw"></i> Message Sent <span class="pull-right text-muted small"><em>27
+											minutes ago</em> </span>
+								</a> <a href="#" class="list-group-item"> <i class="fa fa-tasks fa-fw"></i> New Task <span class="pull-right text-muted small"><em>43
+											minutes ago</em> </span>
+								</a> <a href="#" class="list-group-item"> <i class="fa fa-upload fa-fw"></i> Server Rebooted <span class="pull-right text-muted small"><em>11:32
+											AM</em> </span>
+								</a> <a href="#" class="list-group-item"> <i class="fa fa-bolt fa-fw"></i> Server Crashed! <span class="pull-right text-muted small"><em>11:13
+											AM</em> </span>
+								</a> <a href="#" class="list-group-item"> <i class="fa fa-warning fa-fw"></i> Server Not Responding <span
+									class="pull-right text-muted small"><em>10:57 AM</em> </span>
+								</a> <a href="#" class="list-group-item"> <i class="fa fa-shopping-cart fa-fw"></i> New Order Placed <span
+									class="pull-right text-muted small"><em>9:49 AM</em> </span>
+								</a> <a href="#" class="list-group-item"> <i class="fa fa-money fa-fw"></i> Payment Received <span class="pull-right text-muted small"><em>Yesterday</em>
+								</span>
+								</a>
+							</div>
+							<!-- /.list-group -->
+							<a href="#" class="btn btn-default btn-block">View All Alerts</a>
+						</div>
+						<!-- /.panel-body -->
+					</div>
+					<!-- /.panel -->
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<i class="fa fa-bar-chart-o fa-fw"></i> Donut Chart Example
+						</div>
+						<div class="panel-body">
+							<div id="morris-donut-chart"></div>
+							<a href="#" class="btn btn-default btn-block">View Details</a>
+						</div>
+						<!-- /.panel-body -->
+					</div>
+					<!-- /.panel -->
+					<div class="chat-panel panel panel-default">
+						<div class="panel-heading">
+							<i class="fa fa-comments fa-fw"></i> Chat
+							<div class="btn-group pull-right">
+								<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+									<i class="fa fa-chevron-down"></i>
+								</button>
+								<ul class="dropdown-menu slidedown">
+									<li><a href="#"> <i class="fa fa-refresh fa-fw"></i> Refresh
+									</a></li>
+									<li><a href="#"> <i class="fa fa-check-circle fa-fw"></i> Available
+									</a></li>
+									<li><a href="#"> <i class="fa fa-times fa-fw"></i> Busy
+									</a></li>
+									<li><a href="#"> <i class="fa fa-clock-o fa-fw"></i> Away
+									</a></li>
+									<li class="divider"></li>
+									<li><a href="#"> <i class="fa fa-sign-out fa-fw"></i> Sign Out
+									</a></li>
+								</ul>
+							</div>
+						</div>
+						<!-- /.panel-heading -->
+						<div class="panel-body">
+							<ul class="chat">
+								<li class="left clearfix"><span class="chat-img pull-left"> <img src="http://placehold.it/50/55C1E7/fff" alt="User Avatar"
+										class="img-circle" />
+								</span>
+									<div class="chat-body clearfix">
+										<div class="header">
+											<strong class="primary-font">Jack Sparrow</strong> <small class="pull-right text-muted"> <i class="fa fa-clock-o fa-fw"></i>
+												12 mins ago
+											</small>
+										</div>
+										<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.</p>
+									</div></li>
+								<li class="right clearfix"><span class="chat-img pull-right"> <img src="http://placehold.it/50/FA6F57/fff" alt="User Avatar"
+										class="img-circle" />
+								</span>
+									<div class="chat-body clearfix">
+										<div class="header">
+											<small class=" text-muted"> <i class="fa fa-clock-o fa-fw"></i> 13 mins ago
+											</small> <strong class="pull-right primary-font">Bhaumik Patel</strong>
+										</div>
+										<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.</p>
+									</div></li>
+								<li class="left clearfix"><span class="chat-img pull-left"> <img src="http://placehold.it/50/55C1E7/fff" alt="User Avatar"
+										class="img-circle" />
+								</span>
+									<div class="chat-body clearfix">
+										<div class="header">
+											<strong class="primary-font">Jack Sparrow</strong> <small class="pull-right text-muted"> <i class="fa fa-clock-o fa-fw"></i>
+												14 mins ago
+											</small>
+										</div>
+										<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.</p>
+									</div></li>
+								<li class="right clearfix"><span class="chat-img pull-right"> <img src="http://placehold.it/50/FA6F57/fff" alt="User Avatar"
+										class="img-circle" />
+								</span>
+									<div class="chat-body clearfix">
+										<div class="header">
+											<small class=" text-muted"> <i class="fa fa-clock-o fa-fw"></i> 15 mins ago
+											</small> <strong class="pull-right primary-font">Bhaumik Patel</strong>
+										</div>
+										<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.</p>
+									</div></li>
+							</ul>
+						</div>
+						<!-- /.panel-body -->
+						<div class="panel-footer">
+							<div class="input-group">
+								<input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." /> <span class="input-group-btn">
+									<button class="btn btn-warning btn-sm" id="btn-chat">Send</button>
+								</span>
+							</div>
+						</div>
+						<!-- /.panel-footer -->
+					</div>
+					<!-- /.panel .chat-panel -->
+				</div>
+				<!-- /.col-lg-4 -->
+			</div>
+			<!-- /.row -->
+		</div>
+		<!-- /#page-wrapper -->
+	</div>
+	<!-- /#wrapper -->
+	<!-- jQuery -->
+	<script src="/music/js/jquery.min.js"></script>
+	<!-- Bootstrap Core JavaScript -->
+	<script src="/music/js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+		$("#logout").on("click", function() {
+			$.ajax({
+				url : "/music/admin/logout",
+				dataType : "json",
+				success : function(data) {
+					window.location.href = data.url;
+				}
+			})
 		});
-		$(".material-left .nav-button").click(function(event) {
-			$(this).siblings().stop().slideToggle(300);
-			$(this).parent().siblings().children('ul').stop().slideUp(300);
+		var $modules = $("#nav").find("a");
+		var $material = $("#page-wrapper");
+		$modules.on("click", function() {
+			$modules.removeClass("active");
+			$(this).addClass("active");
+			$.ajax({
+				url : $(this).attr("data-href"),
+				type : "GET",
+				success : function(data) {
+					$material.html(data);
+				}
+			})
 		});
-		$(".material-left .nav-button-a").click(function(event) {
-			$(this).css({
-				color : '#D1402F'
-			}).children("i").css({
-				background : '#D1402F'
+
+		function loadTable(url, loadItem, pageUrl, event) {
+			var $tbody = $("tbody"), $prototype = $tbody.find(".prototype").clone().removeClass("prototype");
+			var $pages = $("ul[data-pages]");
+			$.ajax({
+				url : url,
+				dataType : "json",
+				type : "GET"
+			}).done(function(data) {
+				if (data.code == 200) {
+					var pageBean = data.data, beans = pageBean.beans, $bean;
+					songMenus.map(function(bean, index) {
+						$bean = $prototype.clone();
+						loadItem($bean, bean, index);
+						$tbody.append($bean);
+					});
+
+					loadPages(pageBean, $pages, pageUrl);
+
+					$tbody.on("click", function(e) {
+						var type = $(e.target).attr("data-type");
+						if (type) {
+							var $item = $(e.target).parents("tr");
+							switch (type) {
+								case "delete" :
+									deleteItem($item);
+									break;
+								case "edit" :
+									editItem($item);
+									break;
+							}
+						}
+					});
+				} else {
+					alert("加载失败");
+				}
 			});
-			$(this).children("div").attr({
-				class : 'now fr'
-			});
-			var a = $(this).parent().siblings().children("a");
-			a.css({
-				color : '#fff'
-			}).children("i").css({
-				background : '#fff'
-			});
-			a.children("div").attr({
-				class : 'fr'
-			});
-			var a = $(this).parent().parent().parent().siblings().children('ul').children().children("a");
-			a.css({
-				color : '#fff'
-			}).children("i").css({
-				background : '#fff'
-			});
-			a.children("div").attr({
-				class : 'fr'
-			});
-		});
-		$(window).scroll(function() {
-			var top_height = $(".top").outerHeight();
-			var _height = Math.max(document.body.scrollTop || document.documentElement.scrollTop);
-			var left = $(".material-left");
-			if (_height > top_height) {
-				left.css({
-					position : 'fixed',
-					top : '0',
-					left : '0',
-					'min-height' : height,
-				});
-			} else {
-				left.css({
-					position : 'static',
-				});
-			}
-		});
-		function loadDiv(name) {
 		}
 
-		$(".deletePost").click(function(e) {
-			toDeletePost();
-		})
-		$(".postLog").click(function(e) {
-			toPostLog();
-		})
-		$(".postAppeal").click(function(e) {
-			alert("暂未添加该功能");
-			return;
-			//loadDiv("admin/postLog_findUnprocessAppealLogAll");
-		})
-		$(".userList").click(function(e) {
-			toUserList();
-		})
-		$(".forbiddenList").click(function(e) {
-			toForbiddenList();
-		})
-		$(".blackList").click(function(e) {
-			alert("暂未添加该功能");
-			return;
-			//loadDiv("admin/userLog_findUnrecoverBlackListLog");
-		})
-		$(".userAppeal").click(function(e) {
-			alert("暂未添加该功能");
-			return;
-			//loadDiv("admin/userLog_findUnprocessAppealLog");
-		})
-		$(".userLog").click(function(e) {
-			toUserLog();
-		})
-		$(".barInformation").click(function(e) {
-			alert("暂未添加该功能");
-			return;
-			//loadDiv("admin/load_barInformation");
-		})
-		$(".pictureRecycle").click(function(e) {
-			alert("暂未添加该功能");
-			return;
-			//loadDiv("admin/load_pictureRecycle");
-		})
-		$(".adminAttendance").click(function(e) {
-			alert("暂未添加该功能");
-			return;
-			//loadDiv("admin/load_adminAttendance");
-		})
-		$(".adminManage").click(function(e) {
-			toAdminManage();
-		})
-		$(".adminLog").click(function(e) {
-			toAdminLog();
-		})
-		$(".adminApproval").click(function(e) {
-			alert("暂未添加该功能");
-			return;
-			//loadDiv("admin/load_adminApproval");
-		})
-		$(".generalAdminHost").click(function(e) {
-			alert("暂未添加该功能");
-			return;
-			//loadDiv("admin/load_generalAdminHost");
-		})
-		$(".barSettings").click(function(e) {
-			alert("暂未添加该功能");
-			return;
-			//loadDiv("admin/load_barSettings");
-		})
+		function deleteItem($item) {
+			$.ajax({
+				url : $item.attr("data-url"),
+				type : "DELETE",
+				dataType : "json"
+			}).done(function(data) {
+				if (data.code == 200) {
+					$item.remove();
+				} else {
+					alert("操作失败");
+				}
+			}).fail(function(e) {
+				alert("操作失败");
+			});
+		}
 
-		$(".login").find("a").text("欢迎：" + user.name);
-		$(".regist").find("a").attr("href", getUrl() + "/admin/admin_toStage");
-		$(".index").find("a").attr("href", getUrl() + "/index");
-		$(".index-user-icon").attr("src", getUrl() + "/image/" + user.icon);
-		$(".index-user-name").text(user.name);
+		function loadPages(pageBean, $pages, prefix, load) {
+			$pages.empty();
+			if (pageBean.totalPage < 2) {
+				return;
+			}
+			var config = {
+				addEle : function(index) {
+					var className = "", href = prefix + "page/" + index;
+					if (index == pageBean.page) {
+						className = "active";
+						href = "#";
+					}
+					$pages.append("<li class='"+className+"'><a href='#' data-href='"+href+"'>" + index + "</a></li>");
+				},
+				addPrevious : function() {
+					var className = "", href = prefix + "page/" + (pageBean.page - 1);
+					if (pageBean.page == 1) {
+						className = "disabled";
+						href = "#";
+					}
+					$pages.append("<li><a href='#' class='" + className + "' data-href='" + href + "'>上一页 </a></li>");
+				},
+				addNext : function() {
+					var className = "", href = prefix + "page/" + (pageBean.page + 1);
+					if (pageBean.page == pageBean.totalPage) {
+						className = "disabled";
+						href = "#";
+					}
+					$pages.append("<li><a href='#' class='" + className + "' data-href='" + href + "'>下一页 </a></li>");
+				},
+				totalPage : pageBean.totalPage,
+				page : pageBean.page,
+				limit : pageBean.limit
+			};
+			Page(config);
+			$pages.off("click").on("click", function(e) {
+				$.ajax({
+					url : $(e.target).attr("data-href"),
+					dataType : "json",
+					type : "GET"
+				}).done(function(data) {
+					load(data, prefix)
+				});
+			})
+		}
 
-	})
-</script>
-<body>
-	<div class="top">
-		<ul class="top_head fr">
-			<li class="login fl">
-				<div class="head_div">
-					<a>欢迎</a>
-				</div>
-			</li>
-			<li class="regist fl">
-				<div class="head_div">
-					<a href="/admin/admin_toStage">退出后台</a>
-				</div>
-			</li>
-			<li class="buy fl">
-				<div class="head_div">
-					<a class="buy_a" href="#" title="购买商品"></a>
-				</div>
-			</li>
-			<li class="app fl">
-				<div class="head_div">
-					<a class="app_a" href="#" title="下载手机端"></a>
-				</div>
-			</li>
-			<li class="separator fl">|</li>
-			<li class="center fl">
-				<div class="head_div">
-					<a class="center_a" href="#">应用中心</a>
-				</div>
-			</li>
-			<li class="vip fl">
-				<div class="head_div">
-					<a class="vip_a" href="#">会员官网</a>
-				</div>
-			</li>
-			<li class="index fl">
-				<div class="head_div">
-					<a class="index_a" href="index">首页</a>
-				</div>
-			</li>
-		</ul>
-	</div>
-	<div class="material">
-		<div class="material-left fl">
-			<div class="user">
-				<img class="index-user-icon" src=""> <span class="index-user-name"></span> <span class="user-location">所在吧：我的吧</span>
-			</div>
-			<ul class="nav">
-				<li class="nav-li"><a href="#" class="nav-button"><span></span><i></i>帖子管理</a>
-					<ul class="a">
-						<li><a href="#" class="nav-button-a deletePost"><i></i>吧务删帖</a></li>
-						<li><a href="#" class="nav-button-a postLog"><i></i>帖子管理日志 </a></li>
-						<li><a href="#" class="nav-button-a postAppeal"><i></i>用户帖子申诉 </a></li>
-					</ul></li>
-				<li class="nav-li"><a href="#" class="nav-button"><span> </span><i></i>用户管理</a>
-					<ul>
-						<li><a href="#" class="nav-button-a userList"><i></i>会员列表</a></li>
-						<li><a href="#" class="nav-button-a forbiddenList"><i></i>用户封禁列表 </a></li>
-						<li><a href="#" class="nav-button-a blackList"><i></i>黑名单列表 </a></li>
-						<li><a href="#" class="nav-button-a userAppeal"><i></i>用户申诉列表 </a></li>
-						<li><a href="#" class="nav-button-a userLog"><i></i>用户管理日志 </a></li>
-					</ul></li>
-				<li class="nav-li"><a href="#" class="nav-button"><span> </span><i> </i>数据统计</a>
-					<ul>
-						<li><a href="#" class="nav-button-a barInformation"><i></i>本吧数据 </a></li>
-					</ul></li>
-				<li class="nav-li"><a href="#" class="nav-button"><span> </span><i> </i>资源区管理</a>
-					<ul>
-						<li><a href="#" class="nav-button-a pictureRecycle"><i></i>图册精品回收站 </a></li>
-					</ul></li>
-				<li class="nav-li"><a href="#" class="nav-button"><span> </span><i> </i>吧务团队</a>
-					<ul>
-						<li><a href="#" class="nav-button-a adminAttendance"><i></i>吧务考勤 </a></li>
-						<li><a href="#" class="nav-button-a adminManage"><i></i>团队人员管理 </a></li>
-						<li><a href="#" class="nav-button-a adminLog"><i></i>吧务管理日志 </a></li>
-						<li><a href="#" class="nav-button-a adminApproval"><i></i>吧务审批 </a></li>
-						<li><a href="#" class="nav-button-a"><i></i>吧务群 </a></li>
-						<li><a href="#" class="nav-button-a generalAdminHost"><i></i>普通吧主管理 </a></li>
-					</ul></li>
-				<li class="nav-li"><a href="#" class="nav-button"><span> </span><i> </i>工具及设置</a>
-					<ul>
-						<li><a href="#" class="nav-button-a"><i></i>贴吧神兽 </a></li>
-						<li><a href="#" class="nav-button-a barSettings"><i></i>本吧设置 </a></li>
-					</ul></li>
-			</ul>
-		</div>
-		<div class="material-right fr iframe">
-			<div id="index" class="main">欢迎使用吧务中心</div>
-			<div id="postDelete" style="display: none;">
-				<div class="head">
-					<h1>吧务删帖</h1>
-					<form>
-						<div class="form-top">
-							<span class="initiatorOrOperator"><input name="initiatorOrOperator" type="radio" value="0" />发起人</span> <span class="initiatorOrOperator"><input
-								name="initiatorOrOperator" type="radio" value="1" />操作人</span>
-						</div>
-						<div class="form-bottom">
-							<input class="condition" name="username" type="text" />
-							<div class="operationTime">
-								<input class="operationTime-after" name="operationTime-after" type="date">至 <input class="operationTime-before"
-									name="operationTime-before" type="date"> <a href="#" class="button">搜索</a> <a href="#" class="searchAll">显示全部记录</a>
-							</div>
-						</div>
-					</form>
-				</div>
-				<div class="body">
-					<p class="result">
-						共<span class="result-count"></span>条记录
-					</p>
-					<table class="result-table">
-						<thead>
-							<tr>
-								<td class="select-td">&nbsp;</td>
-								<td class="content-td">帖子内容</td>
-								<td class="people-td">全部操作人</td>
-								<td class="operationTime-td">操作时间</td>
-								<td class="recover-td">恢复帖子</td>
-							</tr>
-						</thead>
-						<tbody></tbody>
-						<tfoot class="table-foot">
-							<tr>
-								<td colspan="5" id="pages"></td>
-							</tr>
-							<tr>
-								<td colspan="5">
-									<p class="selectAll">
-										<input type="checkbox"><span>全选</span>
-									</p> <a href="#" class="button recoverSelected">选中项恢复</a>
-								</td>
-							</tr>
-						</tfoot>
-					</table>
-				</div>
-			</div>
-			<div id="postLog" style="display: none;">
-				<div class="head">
-					<h1>帖子管理日志</h1>
-					<form>
-						<div class="form-top">
-							<span><input name="initiator" type="radio" value="0" />发起人</span> <span><input name="operator" type="radio" value="1" />操作人</span>
-						</div>
-						<div class="form-bottom">
-							<input class="condition" name="username" type="text" />
-							<div class="operationTime">
-								<input class="operationTime-after" name="operationTime_begin" type="date">至 <input class="operationTime-before"
-									name="operationTime_end" type="date"> <a id="search" href="#" class="button">搜索</a> <a id="searchAll" href="#" class="searchAll">显示全部记录</a>
-							</div>
-						</div>
-					</form>
-				</div>
-				<div class="body">
-					<p class="result">
-						共<span class="result-count"></span>条记录
-					</p>
-					<table class="result-table">
-						<thead>
-							<tr>
-								<td class="content-td">帖子内容</td>
-								<td class="operation-td">全部操作</td>
-								<td class="people-td">全部操作人</td>
-								<td class="operationTime-td">操作时间</td>
-							</tr>
-						</thead>
-						<tbody></tbody>
-						<tfoot class="table-foot">
-							<tr>
-								<td id="pages" colspan="5"></td>
-							</tr>
-						</tfoot>
-					</table>
-				</div>
-			</div>
-			<div id="userList" style="display: none;">
-				<div class="head">
-					<h1>会员列表</h1>
-					<div class="form-bottom">
-						<span>用户名</span> <input class="condition" type="text"> <a class="button" href="#">搜索</a>
-					</div>
-				</div>
-				<div class="body">
-					<p class="result">
-						共<span class="result-count"></span>条记录
-					</p>
-					<table class="result-table">
-						<thead>
-							<tr>
-								<td class="user-td">头像和用户名</td>
-								<td class="experience -td">经验值</td>
-								<td class="level-td">等级</td>
-								<td class="postNum-td">本吧发帖数</td>
-								<td class="qualityPost-td">精品贴</td>
-								<td class="time-td">加入时间</td>
-								<td class="operation-td">操作</td>
-							</tr>
-						</thead>
-						<tbody></tbody>
-						<tfoot class="table-foot">
-							<tr>
-								<td id="pages" colspan="7"></td>
-							</tr>
-						</tfoot>
-					</table>
-				</div>
-			</div>
-			<div id="forbiddenList" style="display: none;">
-				<div class="head">
-					<h1>用户封禁列表</h1>
-					<div class="form-bottom">
-						<span>用户名</span> <input class="condition" type="text"> <a class="button" href="#">搜索</a>
-					</div>
-				</div>
-				<div class="body">
-					<p class="result">
-						共<span class="result-count"></span>条记录
-					</p>
-					<table class="result-table">
-						<thead>
-							<tr>
-								<td class="select-td"></td>
-								<td class="user-td">头像和用户名</td>
-								<td class="forbiddenTime-td">封禁时长</td>
-								<td class="time-td">操作时间</td>
-								<td class="people-td">全部操作人</td>
-								<td class="operation-td">操作</td>
-							</tr>
-						</thead>
-						<tbody></tbody>
-						<tfoot class="table-foot">
-							<tr>
-								<td id="pages" colspan="6"></td>
-							</tr>
-							<tr>
-								<td colspan="6">
-									<p class="selectAll">
-										<input type="checkbox"><span>全选</span>
-									</p> <a href="#" class="button forbiddenSelected">选中项解除封禁</a>
-								</td>
-							</tr>
-						</tfoot>
-					</table>
-				</div>
-			</div>
-			<div id="userLog" style="display: none;">
-				<div class="head">
-					<h1>用户管理日志</h1>
-					<div class="form-bottom">
-						<span>用户名</span> <input class="condition" type="text"> <a class="button" href="#">搜索</a>
-					</div>
-				</div>
-				<div class="body">
-					<p class="result">
-						共<span class="result-count"></span>条记录
-					</p>
-					<table class="result-table">
-						<thead>
-							<tr>
-								<td class="content-td">头像和用户名</td>
-								<td class="operation-td">全部操作</td>
-								<td class="people-td">全部操作人</td>
-								<td class="operationTime-td">操作时间</td>
-							</tr>
-						</thead>
-						<tbody>
-						</tbody>
-						<tfoot class="table-foot">
-							<tr>
-								<td id="pages" colspan="5"></td>
-							</tr>
-						</tfoot>
-					</table>
-				</div>
-			</div>
-			<div id="adminManage" style="display: none;">
-				<div class="head">
-					<h1>团队人员管理</h1>
-					<h2>添加吧务成员</h2>
-					<form class="form-bottom">
-						<select id="positions" name="id" class="select"></select> <input name="username" class="condition" type="text"> <a id="addAdmin"
-							href="#" class="button">添加</a>
-					</form>
-				</div>
-				<div class="body">
-					<ul id="userMap" class="list"></ul>
-				</div>
-			</div>
-			<div id="adminLog" style="display: none;">
-				<div class="head">
-					<h1>吧务管理日志</h1>
-					<form>
-						<div class="form-top">
-							<span><input name="initiator" type="radio" value="0" />发起人</span> <span><input name="operator" type="radio" value="1" />操作人</span> <span
-								class="time">操作时间</span>
-						</div>
-						<div class="form-bottom">
-							<input class="condition" name="username" type="text" />
-							<div class="operationTime">
-								<input class="operationTime-after" name="operationTime-after" type="date">至 <input class="operationTime-before"
-									name="operationTime-before" type="date"> <a href="#" class="button">搜索</a> <a href="#" class="searchAll">显示全部记录</a>
-							</div>
-						</div>
-					</form>
-				</div>
-				<div class="body">
-					<p class="result">
-						共<span class="result-count"></span>条记录
-					</p>
-					<table class="result-table">
-						<thead>
-							<tr>
-								<td class="content-td">用户名</td>
-								<td class="operation-td">操作</td>
-								<td class="people-td">全部操作人</td>
-								<td class="operationTime-td">操作时间</td>
-							</tr>
-						</thead>
-						<tbody></tbody>
-						<tfoot class="table-foot">
-							<tr>
-								<td id="pages" colspan="4"></td>
-							</tr>
-						</tfoot>
-					</table>
-				</div>
-			</div>
-		</div>
-	</div>
+		//addEle：根据给出的页数，执行添加方法，前一页、后一页不在其中
+		//addPrevious/addNext：执行前一页或后一页的添加方法
+		//totalPage：总页数
+		//page：当前页数
+		//limit：显示的页面个数
+		function Page(config) {//分页的计算模块
+			var defaultFunction = function() {
+			}, //
+			addEle = config.addEle || defaultFunction, //
+			addPrevious = config.addPrevious || defaultFunction, //
+			addNext = config.addNext || defaultFunction, //
+			totalPage = config.totalPage || 0, //
+			page = config.page || 1, //
+			limit = config.limit || 10;
+
+			if (totalPage <= 0) {
+				//传的什么玩意儿啊
+				return;
+			} else if (totalPage == 1) {
+				//上一页   1  下一页
+				addPrevious();
+				addEle(1);
+				addNext();
+			} else {
+				//一般情况
+				var middle = Math.ceil(limit / 2), //中数
+				begin = page - (middle - 1), //开始位默认值
+				end = page + (middle - 1); //结束位默认值
+
+				if (page < middle) { //中数以下
+					begin = 1;
+					end = limit;
+				}
+				if (totalPage < end) {//结束位修正
+					end = totalPage;
+				}
+
+				addPrevious();
+				for (var i = begin; i < end + 1; i++) {
+					addEle(i);
+				}
+				addNext();
+			}
+		}
+
+		// $yyyy-$MM-$dd-$SS $HH:$mm:$ss:$SS
+		window.DateFormatter = function DateFormatter(regExpString) {
+			var array = new Array();
+			var str = regExpString;
+			str = parse(str);
+
+			function parse(regExpString) {
+				var possibleValues = new Array();
+				var str = regExpString;
+
+				possibleValues.splice(0, possibleValues.length, 2, 4);
+				str = parse_base("y", "year", str, possibleValues);
+
+				possibleValues.splice(0, possibleValues.length, 2);
+				str = parse_base("M", "month", str, possibleValues);
+
+				possibleValues.splice(0, possibleValues.length, 2);
+				str = parse_base("d", "day", str, possibleValues);
+
+				possibleValues.splice(0, possibleValues.length, 2);
+				str = parse_base("H", "hour", str, possibleValues);
+
+				possibleValues.splice(0, possibleValues.length, 2);
+				str = parse_base("m", "minute", str, possibleValues);
+
+				possibleValues.splice(0, possibleValues.length, 2);
+				str = parse_base("s", "seconds", str, possibleValues);
+
+				return str;
+			}
+
+			function parse_base(part, total, regExpString, possibleValues) {
+				var num = regExpString.split(part).length - 1;
+				var str = regExpString;
+				array[total] = new DateItem();
+
+				for (var i = 0; i < possibleValues.length; i++) {
+					if (num === possibleValues[i] && str.split(increaseStr(part, num)).length === 2) {
+						var _str = increaseStr(part, num);
+						str = str.replace(_str, "$" + _str);
+						array[total].regExp = "$" + _str;
+						array.length += 1;
+						return str;
+					}
+					if (num === 0) {
+						return str;
+					}
+				}
+				alert("格式错误：" + regExpString);
+				throw "格式错误：" + regExpString;
+			}
+
+			function increaseStr(str, num) {
+				var result = "";
+				if (num === 0) {
+					return result;
+				}
+				for (var i = 0; i < num; i++) {
+					result += str;
+				}
+				return result;
+			}
+
+			function DateItem(regExp, num) {
+				this.regExp = regExp;
+				this.num = num;
+			}
+
+			this.format = function(time) {
+				var date = new Date();
+				date.setTime(time);
+				array["year"].num = date.getFullYear();
+				array["month"].num = date.getMonth() + 1;
+				array["day"].num = date.getDate();
+				array["hour"].num = date.getHours();
+				array["minute"].num = date.getMinutes();
+				array["seconds"].num = date.getSeconds();
+				return replace(array, str);
+			}
+
+			function replace(array, str) {
+				var _str = str;
+				for ( var i = 0 in array) {
+					var num = "";
+					var regExp = array[i].regExp;
+					if (regExp) {
+						if (array[i].num || array[i].num === 0) {
+							num = array[i].num.toString();
+							if (num.length < regExp.length - 1) {// 时分秒为0
+								num = increaseStr("0", regExp.length - 1 - num.length) + num;
+							} else {// 年只有两位
+								num = num.substring(num.length - regExp.length + 1);
+							}
+						}
+						_str = _str.replace(regExp, num);
+					}
+				}
+				return _str;
+			}
+		}
+
+		//works：[Function,Function]
+		//WorkGroup(works).done(function(){});
+		function WorkGroup(works) {
+			if (!Array.isArray(works)) {
+				throw TypeError("works必须为Array");
+			}
+
+			var num = works.length | 0 //
+			, callback = function(){} //
+			, excuteFlag = true //
+			//定义暴露出去的接口
+			,group = {
+				done : function(_callback) {	//模拟延迟接口
+					callback = _callback;
+					if(num === 0){
+						callback();
+					}
+					return this;
+				},
+				pop : function(work){		//被work调用接口
+					num--;
+					if(num<=0){
+						callback();
+					}
+				},
+				push : function(work){		//动态添加work接口
+					//num++;
+				},
+				fail : function(){			//有工作失败时
+					callback = function(){};
+					excuteFlag = false;
+				}
+			};
+
+			//work与workGroup绑定
+			works.forEach((work)=>{
+				if(work instanceof Function){
+					if(excuteFlag){
+						work.workGroup = group;
+						work.call(work);
+					}
+				}else{
+					throw TypeError("work必须为Function");
+				}
+			});
+
+			return group;
+		}
+		function Work(doSomething) {
+			return {
+				done : function() {
+					doSomething();
+					if(this.workGroup){
+						this.workGroup.pop(this);
+					}
+				}
+			}
+		}
+		function refresh(url){
+			$.ajax({
+				url : url,
+				type : "GET",
+				success : function(data) {
+					$("body").removeAttr("class").removeAttr("style") //
+					.find(".modal-backdrop").remove();
+					$material.html(data);
+				}
+			});
+		}
+	</script>
 </body>
 </html>
